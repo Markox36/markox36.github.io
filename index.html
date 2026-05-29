@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administración de Sistemas — Guía de Estudio v2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@300;400;600;700;800&display=swap');
+
+  :root {
+    --bg:        #0a0e17;
+    --surface:   #111827;
+    --surface2:  #1a2235;
+    --border:    #1e2d45;
+    --accent:    #00d4ff;
+    --accent2:   #7c3aed;
+    --accent3:   #10b981;
+    --accent4:   #f59e0b;
+    --accent5:   #ef4444;
+    --text:      #e2e8f0;
+    --muted:     #64748b;
+    --code-bg:   #0d1b2a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* SIDEBAR */
+  #sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 260px; height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto; z-index: 100;
+    padding: 20px 0 40px;
+  }
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+  .sidebar-logo h1 { font-size: 13px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; line-height: 1.3; }
+  .sidebar-logo span { font-size: 10px; color: var(--muted); display: block; margin-top: 4px; }
+
+  .nav-section { margin-top: 6px; }
+  .nav-section-title { padding: 8px 20px 4px; font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); font-weight: 700; }
+  .nav-item { display: block; padding: 6px 20px; color: #94a3b8; text-decoration: none; font-size: 12px; border-left: 2px solid transparent; transition: all .15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-item:hover { color: var(--accent); border-left-color: var(--accent); background: rgba(0,212,255,.04); }
+  .nav-item.sub { padding-left: 32px; font-size: 11px; color: #64748b; }
+  .nav-item.sub:hover { color: var(--accent3); border-left-color: var(--accent3); }
+
+  /* MAIN */
+  #main { margin-left: 260px; padding: 48px 60px 80px; max-width: 1060px; }
+
+  .page-header { margin-bottom: 60px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+  .page-header .tag { display: inline-block; background: rgba(0,212,255,.1); color: var(--accent); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; padding: 4px 12px; border-radius: 2px; margin-bottom: 16px; }
+  .page-header h1 { font-size: 36px; font-weight: 800; line-height: 1.1; color: #fff; }
+  .page-header h1 span { color: var(--accent); }
+  .page-header p { margin-top: 12px; color: var(--muted); font-size: 14px; max-width: 600px; }
+
+  /* TOPIC HEADERS */
+  .topic-header { display: flex; align-items: center; gap: 14px; margin: 60px 0 28px; padding-bottom: 14px; border-bottom: 2px solid var(--border); }
+  .topic-num { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+  .t1 .topic-num { background: rgba(239,68,68,.15); color: var(--accent5); }
+  .t2 .topic-num { background: rgba(0,212,255,.15); color: var(--accent); }
+  .t3 .topic-num { background: rgba(16,185,129,.15); color: var(--accent3); }
+  .t1 .topic-header h2 { color: var(--accent5); }
+  .t2 .topic-header h2 { color: var(--accent); }
+  .t3 .topic-header h2 { color: var(--accent3); }
+  .topic-header h2 { font-size: 22px; font-weight: 800; color: #fff; margin: 0; }
+
+  h3 { font-size: 15px; font-weight: 700; color: #c4b5fd; margin: 32px 0 12px; padding-left: 10px; border-left: 3px solid var(--accent2); }
+  h4 { font-size: 13px; font-weight: 600; color: var(--accent3); margin: 20px 0 8px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin: 16px 0; }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+  .card-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+
+  code { font-family: 'JetBrains Mono', monospace; background: var(--code-bg); border: 1px solid var(--border); color: #7dd3fc; padding: 1px 6px; border-radius: 3px; font-size: 12px; }
+  pre { font-family: 'JetBrains Mono', monospace; background: var(--code-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); color: #7dd3fc; padding: 16px 20px; border-radius: 6px; font-size: 12px; overflow-x: auto; margin: 12px 0; line-height: 1.6; white-space: pre; }
+  pre .cm { color: #4ade80; }
+  pre .kw { color: #f472b6; }
+  pre .str { color: #fde68a; }
+
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12.5px; }
+  thead tr { background: var(--surface2); }
+  th { padding: 10px 14px; text-align: left; font-weight: 700; color: var(--accent); border-bottom: 2px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: #cbd5e1; vertical-align: top; }
+  tr:hover td { background: rgba(255,255,255,.02); }
+
+  ul, ol { padding-left: 20px; margin: 8px 0; }
+  li { margin: 5px 0; color: #cbd5e1; }
+  li strong { color: var(--accent); }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin: 0 3px; }
+  .badge-b { background: rgba(0,212,255,.15); color: var(--accent); }
+  .badge-g { background: rgba(16,185,129,.15); color: var(--accent3); }
+  .badge-y { background: rgba(245,158,11,.15); color: var(--accent4); }
+  .badge-r { background: rgba(239,68,68,.15); color: var(--accent5); }
+  .badge-p { background: rgba(124,58,237,.15); color: #a78bfa; }
+
+  .callout { display: flex; gap: 12px; padding: 14px 18px; border-radius: 6px; margin: 14px 0; font-size: 13px; }
+  .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .callout.info  { background: rgba(0,212,255,.07);   border-left: 3px solid var(--accent); }
+  .callout.warn  { background: rgba(245,158,11,.07);  border-left: 3px solid var(--accent4); }
+  .callout.tip   { background: rgba(16,185,129,.07);  border-left: 3px solid var(--accent3); }
+  .callout.danger{ background: rgba(239,68,68,.07);   border-left: 3px solid var(--accent5); }
+
+  p { margin: 8px 0; color: #cbd5e1; }
+  .two-col { columns: 2; column-gap: 24px; }
+  .two-col li { break-inside: avoid; }
+  hr.sep { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  @media (max-width: 900px) {
+    #sidebar { display: none; }
+    #main { margin-left: 0; padding: 24px 20px 60px; }
+    .card-grid, .card-grid.three { grid-template-columns: 1fr; }
+    .two-col { columns: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <h1>Admin. de<br>Sistemas 2026</h1>
+    <span>Guía de estudio completa v2</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">🔴 1. Seguridad</div>
+    <a class="nav-item" href="#control-acceso">Control de Acceso</a>
+    <a class="nav-item sub" href="#uid-euid">RUID / EUID / setuid</a>
+    <a class="nav-item sub" href="#modelos-ac">Modelos DAC/MAC/RBAC</a>
+    <a class="nav-item" href="#usuarios">Cuentas de Usuario</a>
+    <a class="nav-item sub" href="#ficheros-usuario">Ficheros /etc/passwd…</a>
+    <a class="nav-item sub" href="#login-shell">Login vs nologin shell</a>
+    <a class="nav-item sub" href="#shadow-hash">Shadow y hash $6$</a>
+    <a class="nav-item sub" href="#sudo">su &amp; sudo</a>
+    <a class="nav-item" href="#crypto">Criptografía</a>
+    <a class="nav-item sub" href="#simetrica">Simétrica / Asimétrica</a>
+    <a class="nav-item sub" href="#pki">Hash / PKI / TLS</a>
+    <a class="nav-item sub" href="#ssh-keys">SSH claves pub/priv</a>
+    <a class="nav-item" href="#firewall">Firewalls</a>
+    <a class="nav-item sub" href="#iptables">iptables</a>
+    <a class="nav-item sub" href="#drop-reject">DROP vs REJECT</a>
+    <a class="nav-item sub" href="#nat">NAT / MASQUERADE</a>
+    <a class="nav-item sub" href="#nftables">nftables</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">🔵 2. Configuración Base</div>
+    <a class="nav-item" href="#redes">Redes / TCP-IP</a>
+    <a class="nav-item sub" href="#apipa">APIPA</a>
+    <a class="nav-item sub" href="#config-red">Config. estática/dinámica</a>
+    <a class="nav-item sub" href="#tools-net">Herramientas de red</a>
+    <a class="nav-item" href="#boot">Boot / Shutdown</a>
+    <a class="nav-item sub" href="#bios-uefi">BIOS vs UEFI</a>
+    <a class="nav-item sub" href="#grub">GRUB</a>
+    <a class="nav-item sub" href="#systemd-targets">Targets vs Runlevels</a>
+    <a class="nav-item sub" href="#systemd-units">Tipos de units</a>
+    <a class="nav-item" href="#soft">Gestión de Software</a>
+    <a class="nav-item sub" href="#versiones">Versiones de paquetes</a>
+    <a class="nav-item sub" href="#dpkg-apt">dpkg vs APT</a>
+    <a class="nav-item sub" href="#firma-apt">Firma GPG / APT</a>
+    <a class="nav-item sub" href="#modulos">Módulos del kernel</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-title">🟢 3. Almacenamiento</div>
+    <a class="nav-item" href="#filesystem">Filesystem</a>
+    <a class="nav-item sub" href="#fstab">fstab / montaje auto</a>
+    <a class="nav-item sub" href="#journaling">Journaling / COW</a>
+    <a class="nav-item sub" href="#lsof-umount">lsof y umount</a>
+    <a class="nav-item" href="#ficheros-linux">Ficheros en Linux</a>
+    <a class="nav-item sub" href="#enlaces">Enlace duro vs simbólico</a>
+    <a class="nav-item sub" href="#sticky">Sticky bit</a>
+    <a class="nav-item sub" href="#dirs-perms">Directorios como ficheros</a>
+    <a class="nav-item" href="#particiones">Particiones / LVM / RAID</a>
+    <a class="nav-item sub" href="#mbr-gpt">MBR vs GPT</a>
+    <a class="nav-item sub" href="#lvm">LVM</a>
+    <a class="nav-item sub" href="#raid">RAID</a>
+    <a class="nav-item sub" href="#quotas">Quotas</a>
+    <a class="nav-item" href="#backup">Backup</a>
+    <a class="nav-item sub" href="#tipos-backup">Tipos de backup</a>
+    <a class="nav-item sub" href="#tar">tar</a>
+    <a class="nav-item sub" href="#rsync">rsync</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+
+  <div class="page-header">
+    <div class="tag">Guía de Estudio · Examen Final 2026</div>
+    <h1>Administración de<br><span>Sistemas</span></h1>
+    <p>Orden: Seguridad → Configuración Base → Almacenamiento. Incluye todos los temas del curso con teoría, comandos y ejemplos.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       BLOQUE 1 — SEGURIDAD
+  ════════════════════════════════════════════ -->
+  <section class="t1">
+
+    <!-- CONTROL DE ACCESO -->
+    <div class="topic-header" id="control-acceso">
+      <div class="topic-num">01</div>
+      <h2>Control de Acceso</h2>
+    </div>
+
+    <h3 id="uid-euid">RUID, EUID y setuid — ¿quién soy para el kernel?</h3>
+    <p>Cada proceso lleva asociados varios identificadores de usuario. Los más importantes son:</p>
+    <div class="card-grid">
+      <div class="card">
+        <h4>RUID — Real User ID</h4>
+        <p>El usuario que <strong>lanzó</strong> el proceso. No cambia durante la vida del proceso (salvo llamadas privilegiadas). El kernel lo usa para enviar señales: solo puedes matar procesos cuyo RUID coincida con el tuyo (o ser root).</p>
+      </div>
+      <div class="card">
+        <h4>EUID — Effective User ID</h4>
+        <p>El usuario que el kernel comprueba para <strong>acceder a recursos</strong> (ficheros, sockets…). Normalmente EUID = RUID, pero cuando se activa el <strong>setuid bit</strong>, el EUID se convierte en el UID del dueño del ejecutable.</p>
+      </div>
+    </div>
+
+    <h4>Ejemplo práctico: passwd</h4>
+    <p>El ejecutable <code>/usr/bin/passwd</code> tiene el bit setuid activo (<code>-rwsr-xr-x</code>, dueño: <code>root</code>). Cuando un usuario normal lo ejecuta:</p>
+    <ul>
+      <li><strong>RUID</strong> = UID del usuario (ej. 1001) — sigue siendo "yo"</li>
+      <li><strong>EUID</strong> = 0 (root) — el proceso actúa con permisos de root</li>
+      <li>Así puede escribir en <code>/etc/shadow</code> (solo root) aunque lo lance cualquier usuario</li>
+    </ul>
+    <pre><span class="cm"># Ver setuid en un binario</span>
+ls -l /usr/bin/passwd
+<span class="kw">-rwsr-xr-x</span> 1 root root  <span class="cm"># 's' en lugar de 'x' = setuid activo</span>
+
+chmod u+s /ruta/binario   <span class="cm"># activar setuid</span>
+chmod 4755 /ruta/binario  <span class="cm"># equivalente octal</span></pre>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Riesgo de seguridad:</strong> un binario con setuid mal programado puede ser explotado para escalar privilegios. Usar con mucha cautela y solo cuando sea estrictamente necesario.</div>
+    </div>
+
+    <h4>setgid y sticky bit</h4>
+    <pre>chmod g+s directorio   <span class="cm"># setgid: ficheros nuevos heredan el grupo del dir</span>
+chmod 2755 directorio
+chmod +t /tmp          <span class="cm"># sticky: solo el dueño puede borrar sus ficheros</span>
+chmod 1777 /tmp</pre>
+
+    <h3 id="modelos-ac">Modelos de Control de Acceso</h3>
+    <table>
+      <thead><tr><th>Modelo</th><th>¿Quién controla?</th><th>Flexibilidad</th><th>Uso típico</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-g">DAC</span> Discrecional</td><td>El propietario del recurso</td><td>Alta</td><td>Linux estándar (chmod, chown)</td></tr>
+        <tr><td><span class="badge badge-b">DAC+ACL</span></td><td>Propietario + lista adicional</td><td>Muy alta</td><td>setfacl — proyectos multi-usuario</td></tr>
+        <tr><td><span class="badge badge-r">MAC</span> Obligatorio</td><td>El administrador / kernel</td><td>Baja</td><td>SELinux, AppArmor — entornos militares</td></tr>
+        <tr><td><span class="badge badge-p">RBAC</span> Por rol</td><td>Roles asignados</td><td>Media</td><td>Empresas — Manager, Developer…</td></tr>
+        <tr><td><span class="badge badge-y">ABAC</span> Por atributos</td><td>Contexto (usuario+recurso+hora)</td><td>Máxima</td><td>Cloud: AWS IAM, Azure AD</td></tr>
+      </tbody>
+    </table>
+
+    <h4>ACLs — Control extendido</h4>
+    <pre>setfacl -m u:usuario:rwx fichero.txt   <span class="cm"># asignar permisos a usuario concreto</span>
+setfacl -m g:grupo:rx fichero.txt      <span class="cm"># asignar permisos a grupo concreto</span>
+getfacl fichero.txt                    <span class="cm"># ver ACLs</span>
+setfacl -x u:usuario fichero.txt       <span class="cm"># eliminar ACL de usuario</span>
+setfacl -b fichero.txt                 <span class="cm"># eliminar TODAS las ACLs</span>
+<span class="cm"># ls -l mostrará '+' al final si hay ACL: -rw-r--r--+</span></pre>
+
+    <hr class="sep">
+
+    <!-- CUENTAS DE USUARIO -->
+    <div class="topic-header" id="usuarios">
+      <div class="topic-num">02</div>
+      <h2>Cuentas de Usuario</h2>
+    </div>
+
+    <h3 id="ficheros-usuario">Ficheros del sistema de usuarios</h3>
+    <table>
+      <thead><tr><th>Fichero</th><th>Formato</th><th>Permisos</th></tr></thead>
+      <tbody>
+        <tr><td><code>/etc/passwd</code></td><td><code>user:x:UID:GID:GECOS:home:shell</code></td><td>Lectura todos</td></tr>
+        <tr><td><code>/etc/shadow</code></td><td><code>user:$id$salt$hash:lastchg:min:max:warn:inact:expire</code></td><td>Solo root</td></tr>
+        <tr><td><code>/etc/group</code></td><td><code>nombre:pw:GID:miembros</code></td><td>Lectura todos</td></tr>
+        <tr><td><code>/etc/gshadow</code></td><td>Contraseñas de grupos</td><td>Solo root</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="login-shell">Login shell vs nologin shell</h3>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Login shell</h4>
+        <p>El usuario <strong>puede iniciar sesión interactiva</strong> en el sistema. El campo <code>shell</code> de <code>/etc/passwd</code> apunta a un intérprete real como <code>/bin/bash</code>, <code>/bin/zsh</code>, <code>/bin/sh</code>.</p>
+        <p>Al hacer login se ejecutan los ficheros de inicialización (<code>/etc/profile</code>, <code>~/.bashrc</code>…).</p>
+        <pre>usuario:x:1001:1001::/home/usuario:<span class="kw">/bin/bash</span></pre>
+      </div>
+      <div class="card">
+        <h4>nologin shell</h4>
+        <p>El usuario <strong>no puede iniciar sesión</strong>. Se usa para cuentas de servicio (www-data, postgres, daemon…) que necesitan existir como propietarios de procesos/ficheros pero no deben tener acceso interactivo.</p>
+        <p>El campo shell apunta a <code>/usr/sbin/nologin</code> o <code>/bin/false</code>. Si alguien intenta conectarse, recibe un mensaje de denegación y la sesión se cierra.</p>
+        <pre>www-data:x:33:33::/var/www:<span class="kw">/usr/sbin/nologin</span></pre>
+      </div>
+    </div>
+    <pre><span class="cm"># Cambiar shell de un usuario</span>
+chsh -s /usr/sbin/nologin usuario   <span class="cm"># desactivar login</span>
+chsh -s /bin/bash usuario           <span class="cm"># reactivar login</span>
+usermod -s /usr/sbin/nologin usuario</pre>
+
+    <h3 id="shadow-hash">Shadow: formato del hash de contraseña</h3>
+    <p>Las contraseñas nunca se guardan en texto plano. En <code>/etc/shadow</code> se almacena un hash con este formato:</p>
+    <div class="card">
+      <pre><span class="kw">$id</span><span class="str">$</span><span class="kw">salt</span><span class="str">$</span><span class="kw">hash</span>
+
+Ejemplo real:
+$6$rounds=5000$saltaleatorio$ABCDEFxyz...</pre>
+      <table>
+        <thead><tr><th>Identificador <code>$id$</code></th><th>Algoritmo</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td><code>$1$</code></td><td>MD5</td><td><span class="badge badge-r">Obsoleto</span></td></tr>
+          <tr><td><code>$2a$</code> / <code>$2b$</code></td><td>bcrypt</td><td><span class="badge badge-g">Seguro</span></td></tr>
+          <tr><td><code>$5$</code></td><td>SHA-256</td><td><span class="badge badge-y">Aceptable</span></td></tr>
+          <tr><td><code>$6$</code></td><td>SHA-512</td><td><span class="badge badge-g">Recomendado en Linux</span></td></tr>
+          <tr><td><code>$y$</code></td><td>yescrypt</td><td><span class="badge badge-g">Moderno, Debian 11+</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>El <strong>salt</strong> es una cadena aleatoria que se añade antes de hashear. Su función es que dos usuarios con la misma contraseña tengan hashes distintos, y que los ataques de diccionario con tablas precomputadas (rainbow tables) sean ineficaces.</p>
+    <pre><span class="cm"># Generar hash SHA-512 manualmente</span>
+mkpasswd -m sha-512 -S "saltaleatorio" "micontraseña"
+python3 -c "import crypt; print(crypt.crypt('pass', crypt.mksalt(crypt.METHOD_SHA512)))"</pre>
+
+    <h3 id="sudo">Gestión de usuarios y sudo</h3>
+    <pre><span class="cm"># Crear usuario</span>
+adduser nuevousuario                          <span class="cm"># interactivo (Debian) ← recomendado</span>
+useradd -m -s /bin/bash -c "Nombre" usuario  <span class="cm"># manual</span>
+
+<span class="cm"># Modificar</span>
+usermod -aG sudo usuario    <span class="cm"># añadir a grupo sudo (sin quitar otros grupos)</span>
+usermod -s /bin/bash usuario
+passwd usuario
+
+<span class="cm"># Eliminar</span>
+deluser --remove-home usuario
+userdel -r usuario
+
+<span class="cm"># Consultar</span>
+id usuario; groups usuario</pre>
+
+    <h4>/etc/sudoers — siempre editar con <code>visudo</code></h4>
+    <pre>root    ALL=(ALL:ALL) ALL
+%sudo   ALL=(ALL:ALL) ALL
+usuario ALL=(ALL) NOPASSWD: ALL                          <span class="cm"># sin contraseña</span>
+usuario ALL=(ALL) /bin/systemctl restart nginx           <span class="cm"># solo ese comando</span>
+<span class="cm"># Ficheros adicionales en /etc/sudoers.d/</span></pre>
+
+    <h3>PAM — Pluggable Authentication Modules</h3>
+    <p>Separa la autenticación de las aplicaciones. Configuración en <code>/etc/pam.d/</code> (un fichero por servicio).</p>
+    <table>
+      <thead><tr><th>Flag de control</th><th>Comportamiento</th></tr></thead>
+      <tbody>
+        <tr><td><code>required</code></td><td>Debe tener éxito, pero sigue evaluando el resto</td></tr>
+        <tr><td><code>requisite</code></td><td>Debe tener éxito; si falla, para inmediatamente</td></tr>
+        <tr><td><code>sufficient</code></td><td>Si tiene éxito, para (éxito global); si falla, continúa</td></tr>
+        <tr><td><code>optional</code></td><td>El resultado no afecta al resultado global</td></tr>
+      </tbody>
+    </table>
+
+    <hr class="sep">
+
+    <!-- CRIPTOGRAFÍA -->
+    <div class="topic-header" id="crypto">
+      <div class="topic-num">03</div>
+      <h2>Criptografía</h2>
+    </div>
+
+    <h3>Los 3 pilares de la seguridad criptográfica</h3>
+    <div class="card-grid three">
+      <div class="card">
+        <h4>🔒 Confidencialidad</h4>
+        <p>Nadie que intercepte los datos puede leerlos. Se consigue con cifrado simétrico (AES) o asimétrico (RSA).</p>
+      </div>
+      <div class="card">
+        <h4>✅ Integridad</h4>
+        <p>Los datos no han sido modificados en tránsito. Se verifica con funciones hash (SHA-256): si un bit cambia, el hash es completamente distinto.</p>
+      </div>
+      <div class="card">
+        <h4>🪪 Autenticación</h4>
+        <p>Se puede probar quién envió el mensaje. Se consigue con firmas digitales (clave privada) verificables por cualquiera con la clave pública.</p>
+      </div>
+    </div>
+
+    <h3 id="simetrica">Criptografía Simétrica vs Asimétrica</h3>
+    <table>
+      <thead><tr><th></th><th>Simétrica</th><th>Asimétrica</th></tr></thead>
+      <tbody>
+        <tr><td>Claves</td><td>1 clave compartida (cifra y descifra)</td><td>Par: clave pública + privada</td></tr>
+        <tr><td>Velocidad</td><td>Muy rápida</td><td>~1000× más lenta</td></tr>
+        <tr><td>Problema</td><td>Distribución segura de la clave</td><td>No escala para grandes volúmenes</td></tr>
+        <tr><td>Algoritmos</td><td>AES-256, ChaCha20</td><td>RSA-4096, ECC, Ed25519</td></tr>
+        <tr><td>Uso en TLS</td><td>Cifrado de datos de sesión</td><td>Intercambio de clave de sesión</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Stream ciphers</strong> (RC4 — obsoleto): cifran bit a bit. <strong>Block ciphers</strong> (AES): cifran bloques de 128 bits con la misma clave → mismo bloque de entrada produce mismo bloque de salida (requiere modo de operación como CBC, GCM).</p>
+
+    <h3 id="pki">Hash y PKI</h3>
+    <p>Las funciones hash son <strong>unidireccionales</strong>: fácil calcular <code>H(x)</code>, imposible obtener <code>x</code> a partir de <code>H(x)</code>. Algoritmos: MD5 (roto), SHA-256, SHA-512.</p>
+    <p>La <strong>PKI (Public Key Infrastructure)</strong> gestiona certificados digitales que asocian una clave pública a una identidad, firmados por una CA (Certificate Authority).</p>
+    <p><strong>Flujo HTTPS:</strong> servidor envía certificado → cliente verifica firma de la CA → se usa criptografía asimétrica para intercambiar una clave de sesión → resto de la comunicación con AES.</p>
+
+    <h3 id="ssh-keys">SSH — Clave pública/privada: configuración completa</h3>
+    <p>La autenticación por clave pública es más segura que por contraseña: el servidor solo almacena la clave pública (no hay secreto que robar del servidor).</p>
+
+    <h4>Paso 1 — Generar el par de claves (en el cliente)</h4>
+    <pre><span class="cm"># Ed25519: recomendado (más corto, igual de seguro que RSA-4096)</span>
+ssh-keygen -t ed25519 -C "comentario@maquina"
+
+<span class="cm"># RSA clásico (compatible con sistemas más antiguos)</span>
+ssh-keygen -t rsa -b 4096 -C "comentario"
+
+<span class="cm"># Resultado:</span>
+~/.ssh/id_ed25519      <span class="cm"># clave PRIVADA — NUNCA compartir</span>
+~/.ssh/id_ed25519.pub  <span class="cm"># clave PÚBLICA — se copia al servidor</span></pre>
+
+    <h4>Paso 2 — Copiar la clave pública al servidor</h4>
+    <pre><span class="cm"># Método automático (recomendado)</span>
+ssh-copy-id -i ~/.ssh/id_ed25519.pub usuario@servidor
+<span class="cm"># → añade la clave a ~/.ssh/authorized_keys en el servidor</span>
+
+<span class="cm"># Método manual</span>
+cat ~/.ssh/id_ed25519.pub | ssh usuario@servidor \
+  "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"</pre>
+
+    <h4>Paso 3 — Permisos obligatorios</h4>
+    <pre>chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_ed25519         <span class="cm"># clave privada: SOLO el propietario</span>
+chmod 644 ~/.ssh/id_ed25519.pub
+chmod 600 ~/.ssh/authorized_keys</pre>
+
+    <h4>Paso 4 — Conectar y opciones avanzadas</h4>
+    <pre>ssh usuario@servidor                          <span class="cm"># conexión básica</span>
+ssh -p 2222 usuario@servidor                  <span class="cm"># puerto alternativo</span>
+ssh -i ~/.ssh/otra_clave usuario@servidor     <span class="cm"># clave específica</span>
+
+<span class="cm"># ~/.ssh/config — alias de conexiones</span>
+Host miservidor
+    HostName 192.168.1.10
+    User admin
+    IdentityFile ~/.ssh/id_ed25519
+    Port 22
+
+ssh miservidor  <span class="cm"># usa la config anterior</span>
+
+<span class="cm"># ssh-agent: evitar escribir passphrase cada vez</span>
+eval $(ssh-agent)
+ssh-add ~/.ssh/id_ed25519</pre>
+
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div><strong>Deshabilitar autenticación por contraseña</strong> en <code>/etc/ssh/sshd_config</code> una vez configuradas las claves: <code>PasswordAuthentication no</code>. Así solo se puede entrar con clave.</div>
+    </div>
+
+    <hr class="sep">
+
+    <!-- FIREWALLS -->
+    <div class="topic-header" id="firewall">
+      <div class="topic-num">04</div>
+      <h2>Firewalls</h2>
+    </div>
+
+    <h3 id="iptables">iptables — Arquitectura</h3>
+    <p>iptables actúa sobre el subsistema <strong>Netfilter</strong> del kernel Linux. Los paquetes pasan por distintos <em>hooks</em> según su destino:</p>
+    <div class="card">
+      <pre>Entrada:   PREROUTING → INPUT (proceso local)
+Reenvío:   PREROUTING → FORWARD → POSTROUTING
+Salida:    OUTPUT → POSTROUTING</pre>
+      <table>
+        <thead><tr><th>Tabla</th><th>Propósito</th><th>Cadenas disponibles</th></tr></thead>
+        <tbody>
+          <tr><td><code>filter</code></td><td>Permitir/bloquear paquetes</td><td>INPUT, FORWARD, OUTPUT</td></tr>
+          <tr><td><code>nat</code></td><td>Traducción de direcciones</td><td>PREROUTING, POSTROUTING, OUTPUT</td></tr>
+          <tr><td><code>mangle</code></td><td>Modificar cabeceras IP/TCP</td><td>Todas</td></tr>
+          <tr><td><code>raw</code></td><td>Evitar tracking de conexiones</td><td>PREROUTING, OUTPUT</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="drop-reject">DROP vs REJECT — ¿cuándo usar cada uno?</h3>
+    <div class="card-grid">
+      <div class="card">
+        <h4>DROP</h4>
+        <p>El paquete se descarta <strong>silenciosamente</strong>. El emisor no recibe ninguna respuesta y tiene que esperar al timeout.</p>
+        <ul>
+          <li><strong>Ventaja:</strong> no revela que existe un firewall ni que el puerto está filtrado. Dificulta el fingerprinting.</li>
+          <li><strong>Ventaja:</strong> ralentiza los escaneos automáticos (nmap, bots).</li>
+          <li><strong>Inconveniente:</strong> las conexiones legítimas tardan más en fallar (esperan timeout).</li>
+          <li><strong>Usar en:</strong> política por defecto (<code>-P INPUT DROP</code>), tráfico de Internet desconocido, protección contra escaneos.</li>
+        </ul>
+        <pre>iptables -P INPUT DROP         <span class="cm"># política por defecto</span>
+iptables -A INPUT -j DROP      <span class="cm"># al final de la cadena</span></pre>
+      </div>
+      <div class="card">
+        <h4>REJECT</h4>
+        <p>El paquete se descarta pero se envía de vuelta un mensaje de error ICMP (<code>icmp-port-unreachable</code> por defecto, o <code>tcp-reset</code> para TCP).</p>
+        <ul>
+          <li><strong>Ventaja:</strong> el cliente sabe inmediatamente que la conexión fue rechazada, sin esperar timeout. Mejor experiencia para usuarios legítimos.</li>
+          <li><strong>Inconveniente:</strong> revela la existencia del firewall y que el puerto está activamente bloqueado.</li>
+          <li><strong>Usar en:</strong> redes internas donde el feedback rápido es prioritario, reglas que afectan a usuarios conocidos.</li>
+        </ul>
+        <pre>iptables -A INPUT -p tcp --dport 23 \
+  -j REJECT --reject-with tcp-reset
+iptables -A INPUT -j REJECT \
+  --reject-with icmp-port-unreachable</pre>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">ℹ️</span>
+      <div><strong>Regla general:</strong> usa <strong>DROP</strong> para la política por defecto y para tráfico externo/desconocido. Usa <strong>REJECT</strong> dentro de redes internas donde quieres que los fallos sean rápidos y explícitos.</div>
+    </div>
+
+    <h3 id="nat">NAT — Network Address Translation</h3>
+    <p>NAT permite que múltiples máquinas de una red privada compartan una sola IP pública. Opera en la tabla <code>nat</code> de iptables.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>SNAT — Source NAT</h4>
+        <p>Cambia la IP <strong>origen</strong> de los paquetes salientes. Se usa cuando la IP pública es <strong>fija</strong>. Se aplica en <code>POSTROUTING</code> (después de decidir el enrutamiento).</p>
+        <pre>iptables -t nat -A POSTROUTING \
+  -o eth1 \
+  -j SNAT --to-source 203.0.113.5
+<span class="cm"># eth1 = interfaz hacia Internet</span>
+<span class="cm"># 203.0.113.5 = IP pública fija</span></pre>
+      </div>
+      <div class="card">
+        <h4>MASQUERADE</h4>
+        <p>Variante de SNAT para IPs <strong>dinámicas</strong> (DHCP). En lugar de especificar la IP, el kernel toma automáticamente la IP actual de la interfaz de salida. Más flexible pero ligeramente más lento.</p>
+        <pre>iptables -t nat -A POSTROUTING \
+  -o eth1 \
+  -j MASQUERADE
+<span class="cm"># No necesita saber la IP pública</span>
+<span class="cm"># Ideal para: routers domésticos, VPS con IP dinámica</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>DNAT — Destination NAT (Port Forwarding)</h4>
+      <p>Cambia la IP/puerto <strong>destino</strong>. Redirige tráfico que llega a la IP pública hacia una máquina interna. Se aplica en <code>PREROUTING</code> (antes del enrutamiento).</p>
+      <pre><span class="cm"># Redirigir puerto 80 externo → servidor web interno 10.1.1.2:80</span>
+iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80 \
+  -j DNAT --to-destination 10.1.1.2:80
+
+<span class="cm"># También hay que permitir el FORWARD hacia el servidor interno</span>
+iptables -A FORWARD -d 10.1.1.2 -p tcp --dport 80 -j ACCEPT
+
+<span class="cm"># También hay que habilitar ip_forward en el kernel</span>
+sysctl -w net.ipv4.ip_forward=1
+echo "net.ipv4.ip_forward=1" >> /etc/sysctl.d/99-routing.conf</pre>
+    </div>
+
+    <h4>Plantilla completa de firewall con NAT</h4>
+    <pre><span class="cm"># Limpiar reglas existentes</span>
+iptables -F; iptables -X; iptables -t nat -F
+
+<span class="cm"># Políticas por defecto</span>
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT ACCEPT
+
+<span class="cm"># Tráfico stateful (siempre primero)</span>
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
+
+<span class="cm"># Loopback y red interna</span>
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -i eth0 -j ACCEPT          <span class="cm"># eth0 = red interna</span>
+iptables -A FORWARD -i eth0 -o eth1 -j ACCEPT
+
+<span class="cm"># NAT salida (Masquerade para IP dinámica)</span>
+iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+
+<span class="cm"># DNAT: port forwarding SSH al servidor interno</span>
+iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 22 \
+  -j DNAT --to-destination 10.1.1.10:22
+iptables -A FORWARD -d 10.1.1.10 -p tcp --dport 22 -j ACCEPT
+
+<span class="cm"># Servicios permitidos desde exterior</span>
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+
+<span class="cm"># Persistir reglas</span>
+apt install iptables-persistent
+iptables-save > /etc/iptables/rules.v4</pre>
+
+    <h3 id="nftables">nftables — Sintaxis moderna</h3>
+    <pre><span class="cm"># nftables unifica filter + nat en una sola herramienta</span>
+nft add table inet fw
+nft add chain inet fw input { type filter hook input priority 0 \; policy drop \; }
+nft add rule inet fw input ct state established,related accept
+nft add rule inet fw input iifname "lo" accept
+nft add rule inet fw input tcp dport 22 accept
+
+<span class="cm"># NAT con nftables</span>
+nft add table ip nat
+nft add chain ip nat postrouting { type nat hook postrouting priority srcnat \; }
+nft add rule ip nat postrouting oifname "eth1" masquerade
+
+nft list ruleset           <span class="cm"># ver todo</span>
+nft -f /etc/nftables.conf  <span class="cm"># cargar fichero</span>
+systemctl enable --now nftables</pre>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       BLOQUE 2 — CONFIGURACIÓN BASE
+  ════════════════════════════════════════════ -->
+  <section class="t2">
+
+    <!-- REDES -->
+    <div class="topic-header" id="redes">
+      <div class="topic-num">05</div>
+      <h2>Redes / TCP-IP</h2>
+    </div>
+
+    <h3>Modelo TCP/IP — Capas</h3>
+    <div class="card-grid">
+      <div class="card"><h4>Enlace / Física</h4><p>Hardware (Ethernet 802.3). Framing, control de errores, dirección MAC.</p></div>
+      <div class="card"><h4>Internet (IP)</h4><p>Direccionamiento, enrutamiento, fragmentación. Protocolos: IP, ARP, ICMP.</p></div>
+      <div class="card"><h4>Transporte</h4><p><strong>TCP</strong> (fiable, orientado a conexión), <strong>UDP</strong> (no fiable, sin conexión), SCTP.</p></div>
+      <div class="card"><h4>Aplicación</h4><p>HTTP, DNS, SSH, SMTP, NTP… Usa la capa de transporte para enviar/recibir.</p></div>
+    </div>
+
+    <h3>Rangos de direcciones IPv4</h3>
+    <table>
+      <thead><tr><th>Rango</th><th>Tipo</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td><code>10.0.0.0/8</code></td><td>Privado (clase A)</td><td>Redes corporativas grandes</td></tr>
+        <tr><td><code>172.16.0.0/12</code></td><td>Privado (clase B)</td><td>Redes medianas, Docker, VPN</td></tr>
+        <tr><td><code>192.168.0.0/16</code></td><td>Privado (clase C)</td><td>Redes domésticas / pequeñas</td></tr>
+        <tr><td><code>127.0.0.0/8</code></td><td>Loopback</td><td>Comunicación interna del host</td></tr>
+        <tr><td><code>169.254.0.0/16</code></td><td>Link-local / APIPA</td><td>Ver abajo ↓</td></tr>
+        <tr><td><code>0.0.0.0/8</code></td><td>Sin especificar</td><td>Fuente en DHCP Discover</td></tr>
+        <tr><td><code>255.255.255.255</code></td><td>Broadcast limitado</td><td>DHCP Discover</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="apipa">APIPA — Automatic Private IP Addressing</h3>
+    <p><strong>APIPA</strong> es un mecanismo por el que un dispositivo se asigna automáticamente una dirección IP cuando <strong>no puede contactar con un servidor DHCP</strong>. El rango es <code>169.254.0.0/16</code> (definido en RFC 3927).</p>
+
+    <div class="card">
+      <h4>¿Cómo funciona?</h4>
+      <ol>
+        <li>El dispositivo intenta obtener IP por DHCP (envía DHCP Discover en broadcast).</li>
+        <li>Si no recibe respuesta tras varios intentos, selecciona aleatoriamente una dirección en <code>169.254.1.0</code> – <code>169.254.254.255</code>.</li>
+        <li>Antes de usarla, envía una petición ARP para verificar que nadie más la tiene (ARP probe). Si hay colisión, elige otra.</li>
+        <li>Configura la interfaz con esa IP y máscara <code>/16</code>.</li>
+      </ol>
+      <h4>Limitaciones importantes</h4>
+      <ul>
+        <li>Solo funciona en la <strong>misma red local</strong>: no hay gateway, no hay DNS, no hay acceso a Internet.</li>
+        <li>Útil para diagnóstico y comunicación directa entre máquinas en la misma LAN sin infraestructura.</li>
+        <li>Ver una IP APIPA en producción indica un <strong>problema con el servidor DHCP o la red</strong>.</li>
+      </ul>
+    </div>
+    <pre><span class="cm"># Detectar si una interfaz tiene IP APIPA</span>
+ip a | grep "169.254"
+<span class="cm"># Si aparece → revisar: ¿está el DHCP server activo? ¿hay conectividad?</span></pre>
+
+    <h3 id="config-red">Configuración de red: estática vs dinámica</h3>
+    <div class="card-grid">
+      <div class="card">
+        <h4>IP Estática</h4>
+        <p>La IP se configura manualmente y no cambia. Recomendada para servidores, routers, impresoras de red y cualquier dispositivo al que otros se conecten por IP.</p>
+        <p><strong>Ventaja:</strong> siempre la misma dirección. <strong>Inconveniente:</strong> hay que configurar manualmente cada dispositivo.</p>
+      </div>
+      <div class="card">
+        <h4>IP Dinámica (DHCP)</h4>
+        <p>Un servidor DHCP asigna la IP automáticamente. Recomendada para clientes (PCs, laptops, móviles).</p>
+        <p><strong>Ventaja:</strong> gestión centralizada, sin configuración manual. <strong>Inconveniente:</strong> la IP puede cambiar.</p>
+      </div>
+    </div>
+
+    <h4>Configurar IP estática con <code>ip</code> (temporal, no persiste al reiniciar)</h4>
+    <pre>ip addr add 192.168.1.10/24 dev eth0
+ip link set eth0 up
+ip route add default via 192.168.1.1
+echo "nameserver 8.8.8.8" > /etc/resolv.conf</pre>
+
+    <h4>Configurar IP estática con ifupdown (<code>/etc/network/interfaces</code>)</h4>
+    <pre>auto eth0
+iface eth0 inet static
+    address 192.168.1.10
+    netmask 255.255.255.0
+    gateway 192.168.1.1
+    dns-nameservers 8.8.8.8 1.1.1.1
+
+<span class="cm"># Aplicar cambios</span>
+ifdown eth0 && ifup eth0</pre>
+
+    <h4>Configurar IP estática con NetworkManager (<code>nmcli</code>)</h4>
+    <pre><span class="cm"># Crear conexión con IP estática</span>
+nmcli con add type ethernet con-name "mi-red" ifname eth0 \
+  ip4 192.168.1.10/24 gw4 192.168.1.1
+nmcli con mod "mi-red" ipv4.dns "8.8.8.8 1.1.1.1"
+nmcli con mod "mi-red" ipv4.method manual
+nmcli con up "mi-red"
+
+<span class="cm"># Ver estado de conexiones</span>
+nmcli con show; nmcli dev status</pre>
+
+    <h4>Configurar IP dinámica (DHCP)</h4>
+    <pre><span class="cm"># Con ip (iniciar cliente DHCP manualmente)</span>
+dhclient eth0
+
+<span class="cm"># Con ifupdown</span>
+iface eth0 inet dhcp   <span class="cm"># en /etc/network/interfaces</span>
+
+<span class="cm"># Con nmcli</span>
+nmcli con mod "mi-red" ipv4.method auto
+nmcli con up "mi-red"</pre>
+
+    <h4>Gestores de red — cuándo usar cada uno</h4>
+    <table>
+      <thead><tr><th>Gestor</th><th>Cuándo usarlo</th><th>Ficheros de config</th></tr></thead>
+      <tbody>
+        <tr><td><code>ifupdown</code></td><td>Debian/Ubuntu antiguo, servidores simples sin WiFi</td><td><code>/etc/network/interfaces</code></td></tr>
+        <tr><td><code>NetworkManager</code></td><td>Escritorios, laptops, WiFi, VPNs</td><td><code>/etc/NetworkManager/</code></td></tr>
+        <tr><td><code>systemd-networkd</code></td><td>Servidores modernos, contenedores, sistemas mínimos</td><td><code>/etc/systemd/network/*.network</code></td></tr>
+        <tr><td><code>Netplan</code></td><td>Ubuntu 18.04+ (YAML unificado sobre NM o systemd-networkd)</td><td><code>/etc/netplan/*.yaml</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>No deben coexistir dos gestores de red controlando la misma interfaz. Esto puede causar conflictos de configuración.</div>
+    </div>
+
+    <h4>DNS — Resolución de nombres</h4>
+    <ul>
+      <li><code>/etc/hosts</code> — override manual local. Se consulta antes que DNS.</li>
+      <li><code>/etc/resolv.conf</code> — servidores DNS: <code>nameserver 8.8.8.8</code></li>
+      <li><code>/etc/nsswitch.conf</code> — orden de resolución: <code>hosts: files dns</code></li>
+    </ul>
+
+    <h3 id="tools-net">Herramientas de diagnóstico de red</h3>
+    <table>
+      <thead><tr><th>Herramienta</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td><code>ip a / ip r / ip n</code></td><td>Interfaces, rutas, tabla ARP</td></tr>
+        <tr><td><code>ss -tulnp</code></td><td>Sockets abiertos (reemplaza netstat)</td></tr>
+        <tr><td><code>ping / mtr</code></td><td>Conectividad / traceroute en tiempo real</td></tr>
+        <tr><td><code>dig / nslookup</code></td><td>Consultas DNS</td></tr>
+        <tr><td><code>tcpdump -i eth0 port 80</code></td><td>Captura de paquetes</td></tr>
+        <tr><td><code>nmap -sV 192.168.1.0/24</code></td><td>Inventario y auditoría de red</td></tr>
+        <tr><td><code>iperf3</code></td><td>Medición de ancho de banda</td></tr>
+      </tbody>
+    </table>
+
+    <hr class="sep">
+
+    <!-- BOOT -->
+    <div class="topic-header" id="boot">
+      <div class="topic-num">06</div>
+      <h2>Boot / Shutdown</h2>
+    </div>
+
+    <h3>Fases del arranque Linux</h3>
+    <div class="card-grid three">
+      <div class="card"><h4>1. POST (Power-On Self Test)</h4><p>El firmware comprueba que el hardware básico funciona (CPU, RAM, teclado…). Si algo falla, emite pitidos o muestra error.</p></div>
+      <div class="card"><h4>2. BIOS / UEFI</h4><p>Localiza el dispositivo de arranque y carga el bootloader. Ver tabla comparativa abajo.</p></div>
+      <div class="card"><h4>3. GRUB</h4><p>Carga el kernel e initrd. Muestra menú de arranque. Ver sección GRUB.</p></div>
+      <div class="card"><h4>4. Kernel</h4><p>Descomprime <code>vmlinuz</code>, monta initrd como rootfs temporal, detecta hardware, carga drivers básicos, arranca PID 1.</p></div>
+      <div class="card"><h4>5. systemd (PID 1)</h4><p>Gestiona el resto del arranque: monta filesystems, inicia servicios según dependencias, activa targets.</p></div>
+      <div class="card"><h4>6. Espacio de usuario</h4><p>Se completa el target por defecto (<code>graphical.target</code> o <code>multi-user.target</code>). El usuario puede hacer login.</p></div>
+    </div>
+
+    <h3 id="bios-uefi">BIOS vs UEFI</h3>
+    <table>
+      <thead><tr><th>Característica</th><th>BIOS</th><th>UEFI</th></tr></thead>
+      <tbody>
+        <tr><td>Año de origen</td><td>1975</td><td>2005 (Intel EFI)</td></tr>
+        <tr><td>Interfaz</td><td>Texto, 16-bit</td><td>Gráfica, 32/64-bit</td></tr>
+        <tr><td>Tabla de particiones</td><td>MBR (sector 0)</td><td>GPT (con ESP)</td></tr>
+        <tr><td>Tamaño máximo de disco</td><td>2 TB</td><td>9.4 ZB (teórico)</td></tr>
+        <tr><td>Nº particiones</td><td>4 primarias</td><td>128</td></tr>
+        <tr><td>Bootloader</td><td>En MBR (512 bytes)</td><td>Fichero <code>.efi</code> en partición ESP</td></tr>
+        <tr><td>Secure Boot</td><td>No</td><td>Sí (valida firmas del bootloader)</td></tr>
+        <tr><td>Velocidad de arranque</td><td>Más lento</td><td>Más rápido</td></tr>
+        <tr><td>Red en pre-boot</td><td>Limitada (PXE básico)</td><td>Completa (HTTP boot)</td></tr>
+        <tr><td>Drivers de firmware</td><td>No</td><td>Sí (drivers EFI propios)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="grub">GRUB — ¿Por qué no lo sustituye UEFI?</h3>
+    <p>UEFI puede cargar directamente un kernel Linux firmado sin GRUB (usando <strong>EFI stub</strong>). Sin embargo, GRUB sigue siendo imprescindible porque:</p>
+    <ul>
+      <li><strong>Menú de arranque multi-sistema:</strong> GRUB gestiona arranque dual (Linux + Windows) con un menú visual.</li>
+      <li><strong>Parámetros del kernel en tiempo real:</strong> se pueden editar antes de arrancar (modo rescate, <code>init=/bin/bash</code>…).</li>
+      <li><strong>Compatibilidad:</strong> funciona tanto con BIOS como con UEFI.</li>
+      <li><strong>Múltiples kernels:</strong> permite seleccionar entre versiones instaladas del kernel.</li>
+    </ul>
+    <pre>update-grub                             <span class="cm"># regenerar /boot/grub/grub.cfg</span>
+grub-mkconfig -o /boot/grub/grub.cfg   <span class="cm"># equivalente</span>
+cat /proc/cmdline                       <span class="cm"># parámetros con los que arrancó el kernel actual</span>
+journalctl -k                           <span class="cm"># mensajes del kernel (dmesg persistente)</span></pre>
+
+    <h3 id="systemd-targets">Targets de systemd vs Runlevels SysV</h3>
+    <table>
+      <thead><tr><th>SysV Runlevel</th><th>systemd Target</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td><code>poweroff.target</code></td><td>Apagar el sistema</td></tr>
+        <tr><td>1</td><td><code>rescue.target</code></td><td>Single-user, solo root, para rescate</td></tr>
+        <tr><td>2, 3, 4</td><td><code>multi-user.target</code></td><td>Multi-usuario con red, sin GUI</td></tr>
+        <tr><td>5</td><td><code>graphical.target</code></td><td>Multi-usuario + entorno gráfico</td></tr>
+        <tr><td>6</td><td><code>reboot.target</code></td><td>Reiniciar</td></tr>
+      </tbody>
+    </table>
+    <pre>systemctl get-default                        <span class="cm"># ver target por defecto</span>
+systemctl set-default graphical.target       <span class="cm"># cambiar target por defecto</span>
+systemctl isolate multi-user.target          <span class="cm"># cambiar ahora (sin reiniciar)</span>
+systemctl list-units --type=target           <span class="cm"># ver todos los targets activos</span>
+systemd-analyze                              <span class="cm"># tiempo total de arranque</span>
+systemd-analyze critical-chain              <span class="cm"># cuello de botella en el arranque</span></pre>
+
+    <h3 id="systemd-units">Tipos de units en systemd</h3>
+    <p>systemd gestiona no solo servicios sino <strong>cualquier recurso del sistema</strong> mediante units:</p>
+    <table>
+      <thead><tr><th>Tipo</th><th>Extensión</th><th>Para qué sirve</th></tr></thead>
+      <tbody>
+        <tr><td>Service</td><td><code>.service</code></td><td>Procesos/daemons (nginx, sshd, postgresql…)</td></tr>
+        <tr><td>Target</td><td><code>.target</code></td><td>Agrupa otras units (como runlevels). Ej: <code>multi-user.target</code></td></tr>
+        <tr><td>Timer</td><td><code>.timer</code></td><td>Reemplaza cron. Activa un .service en un momento dado</td></tr>
+        <tr><td>Mount</td><td><code>.mount</code></td><td>Monta un filesystem (generado desde /etc/fstab)</td></tr>
+        <tr><td>Socket</td><td><code>.socket</code></td><td>Activación de servicio por socket (lazy start)</td></tr>
+        <tr><td>Path</td><td><code>.path</code></td><td>Activa un servicio cuando cambia un fichero/directorio</td></tr>
+        <tr><td>Device</td><td><code>.device</code></td><td>Dispositivos de hardware (udev)</td></tr>
+        <tr><td>Slice</td><td><code>.slice</code></td><td>Gestión de recursos cgroups para grupos de procesos</td></tr>
+      </tbody>
+    </table>
+    <pre><span class="cm"># Gestión de servicios</span>
+systemctl start|stop|restart|status sshd
+systemctl enable|disable sshd     <span class="cm"># arranque automático</span>
+systemctl daemon-reload           <span class="cm"># recargar tras modificar unit files</span>
+
+<span class="cm"># Ficheros de units</span>
+/lib/systemd/system/   <span class="cm"># units del sistema (no editar)</span>
+/etc/systemd/system/   <span class="cm"># units locales (más prioritario)</span>
+
+<span class="cm"># Timer systemd</span>
+systemctl list-timers --all       <span class="cm"># ver todos los timers</span>
+systemctl enable --now mi.timer</pre>
+
+    <hr class="sep">
+
+    <!-- GESTIÓN DE SOFTWARE -->
+    <div class="topic-header" id="soft">
+      <div class="topic-num">07</div>
+      <h2>Gestión de Software</h2>
+    </div>
+
+    <h3 id="versiones">Versiones de paquetes — significado</h3>
+    <p>Los paquetes siguen el esquema de <strong>Versionado Semántico</strong> (<code>SemVer</code>):</p>
+    <div class="card">
+      <pre>v<span class="kw">1</span>.<span class="str">4</span>.<span class="cm">2</span>-<span class="kw">3</span>~<span class="str">ubuntu22.04</span>
+ │  │  │  │   └── Sufijo de distribución (no afecta compatibilidad)
+ │  │  │  └────── Revisión del paquete (cambios en el empaquetado, no en el código)
+ │  │  └───────── PATCH: corrección de bugs, totalmente compatible
+ │  └──────────── MINOR: nueva funcionalidad, compatible hacia atrás
+ └─────────────── MAJOR: cambios incompatibles con versiones anteriores</pre>
+    </div>
+    <ul>
+      <li><strong>Cambio de MAJOR (1→2):</strong> puede romper scripts o configuraciones existentes. Requiere revisión.</li>
+      <li><strong>Cambio de MINOR (1.3→1.4):</strong> nuevas funciones, pero lo que funcionaba antes sigue funcionando.</li>
+      <li><strong>Cambio de PATCH (1.4.1→1.4.2):</strong> solo correcciones. Actualizar siempre.</li>
+    </ul>
+    <pre><span class="cm"># Ver versión instalada y disponible</span>
+apt-cache policy nginx
+dpkg -l nginx</pre>
+
+    <h3 id="dpkg-apt">dpkg vs APT — diferencias clave</h3>
+    <div class="card-grid">
+      <div class="card">
+        <h4>dpkg — bajo nivel</h4>
+        <p>Herramienta de <strong>bajo nivel</strong>. Trabaja con ficheros <code>.deb</code> individuales. <strong>No accede a repositorios</strong> ni resuelve dependencias automáticamente.</p>
+        <pre>dpkg -i paquete.deb     <span class="cm"># instalar .deb local</span>
+dpkg -r paquete         <span class="cm"># desinstalar</span>
+dpkg -l                 <span class="cm"># listar instalados</span>
+dpkg -L paquete         <span class="cm"># ficheros del paquete</span>
+dpkg -S $(which cmd)    <span class="cm"># qué paquete tiene ese fichero</span>
+dpkg --get-selections   <span class="cm"># todos los paquetes</span></pre>
+      </div>
+      <div class="card">
+        <h4>APT — alto nivel</h4>
+        <p>Herramienta de <strong>alto nivel</strong>. Usa dpkg internamente pero además: accede a <strong>repositorios remotos</strong>, descarga paquetes, <strong>resuelve dependencias</strong> automáticamente, verifica firmas GPG.</p>
+        <pre>apt update              <span class="cm"># actualizar lista repos</span>
+apt install paquete     <span class="cm"># instalar + deps</span>
+apt remove paquete      <span class="cm"># eliminar</span>
+apt purge paquete       <span class="cm"># eliminar + config</span>
+apt upgrade             <span class="cm"># actualizar todo</span>
+apt autoremove          <span class="cm"># limpiar huérfanos</span>
+apt search kw           <span class="cm"># buscar en repos</span>
+apt-file search fichero <span class="cm"># qué paquete lo incluye</span></pre>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">ℹ️</span>
+      <div><strong>Repositorios:</strong> configurados en <code>/etc/apt/sources.list</code> y <code>/etc/apt/sources.list.d/*.list</code>. Cada entrada tiene: tipo (<code>deb</code>/<code>deb-src</code>), URL, distribución y componentes (<code>main contrib non-free</code>).</div>
+    </div>
+
+    <h3 id="firma-apt">Verificación por firma GPG en APT</h3>
+    <p>APT verifica la autenticidad de los paquetes mediante criptografía de clave pública. El mantenedor del repositorio firma los metadatos con su clave privada GPG, y APT los verifica con la clave pública.</p>
+    <pre><span class="cm"># Flujo de verificación:</span>
+<span class="cm"># 1. apt update descarga Release + Release.gpg del repositorio</span>
+<span class="cm"># 2. APT verifica Release.gpg con las claves en /etc/apt/trusted.gpg.d/</span>
+<span class="cm"># 3. Release contiene checksums SHA256 de todos los ficheros del repo</span>
+<span class="cm"># 4. Cada .deb descargado se verifica contra esos checksums</span>
+
+<span class="cm"># Añadir clave GPG de un repositorio externo (método moderno)</span>
+wget -qO- https://repo.ejemplo.com/KEY.gpg | \
+  gpg --dearmor | \
+  sudo tee /etc/apt/trusted.gpg.d/ejemplo.gpg > /dev/null
+
+<span class="cm"># Añadir el repositorio</span>
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/ejemplo.gpg] \
+  https://repo.ejemplo.com stable main" | \
+  sudo tee /etc/apt/sources.list.d/ejemplo.list
+
+<span class="cm"># Ver claves de confianza</span>
+apt-key list    <span class="cm"># (obsoleto pero aún funciona)</span>
+ls /etc/apt/trusted.gpg.d/</pre>
+
+    <h3 id="modulos">Módulos del kernel — carga en caliente</h3>
+    <p>Linux tiene un diseño <strong>modular</strong>: el kernel base es pequeño y carga drivers/funcionalidades adicionales como <strong>módulos</strong> en tiempo real, <strong>sin reiniciar</strong>. Esto permite añadir soporte para nuevo hardware, protocolos de red o sistemas de ficheros de forma dinámica.</p>
+    <pre>uname -r                   <span class="cm"># versión del kernel actual</span>
+lsmod                      <span class="cm"># módulos cargados (nombre, tamaño, nº de usos)</span>
+modinfo e1000              <span class="cm"># info de un módulo: deps, parámetros, descripción</span>
+
+modprobe nombre            <span class="cm"># cargar módulo (resuelve dependencias automáticamente)</span>
+modprobe -r nombre         <span class="cm"># descargar módulo</span>
+modprobe -v nombre         <span class="cm"># cargar con verbose (ver qué hace)</span>
+
+insmod /ruta/modulo.ko     <span class="cm"># cargar fichero .ko directamente (sin resolver deps)</span>
+rmmod nombre               <span class="cm"># descargar (sin resolver deps)</span>
+
+<span class="cm"># Carga automática en boot</span>
+echo "nombre_modulo" >> /etc/modules-load.d/modulo.conf
+
+<span class="cm"># Parámetros de módulos</span>
+/etc/modprobe.d/*.conf
+echo "options iwlwifi 11n_disable=1" > /etc/modprobe.d/wifi.conf
+
+<span class="cm"># Módulos disponibles para el kernel actual</span>
+ls /lib/modules/$(uname -r)/kernel/</pre>
+
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div><strong>modprobe vs insmod:</strong> usa siempre <code>modprobe</code>. Resuelve dependencias automáticamente (si el módulo A necesita el módulo B, lo carga también). <code>insmod</code> es de bajo nivel y fallará si las dependencias no están cargadas.</div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       BLOQUE 3 — ALMACENAMIENTO
+  ════════════════════════════════════════════ -->
+  <section class="t3">
+
+    <!-- FILESYSTEM -->
+    <div class="topic-header" id="filesystem">
+      <div class="topic-num">08</div>
+      <h2>Filesystem</h2>
+    </div>
+
+    <h3>Tipos de sistemas de ficheros</h3>
+    <table>
+      <thead><tr><th>FS</th><th>Journaling</th><th>Notas</th></tr></thead>
+      <tbody>
+        <tr><td>ext4</td><td>Sí</td><td>Estándar Linux, robusto, ampliamente soportado</td></tr>
+        <tr><td>XFS</td><td>Sí</td><td>Excelente para ficheros grandes y HPC</td></tr>
+        <tr><td>Btrfs</td><td>CoW</td><td>Snapshots nativos, RAID integrado, auto-reparación</td></tr>
+        <tr><td>ZFS</td><td>CoW</td><td>Enterprise, pool de almacenamiento, checksums</td></tr>
+        <tr><td>NTFS</td><td>Sí</td><td>Windows</td></tr>
+        <tr><td>vfat/exFAT</td><td>No</td><td>USB/SD cards (máxima compatibilidad)</td></tr>
+        <tr><td>tmpfs</td><td>No</td><td>En RAM (<code>/tmp</code>, <code>/run</code>). Muy rápido, no persiste</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="journaling">Journaling — protección contra corrupción</h3>
+    <p>El <strong>journaling</strong> es un mecanismo de los sistemas de ficheros para garantizar la integridad de los datos ante fallos inesperados (corte de luz, kernel panic…).</p>
+    <div class="card">
+      <h4>¿Cómo funciona?</h4>
+      <p>Antes de escribir datos en el disco, el sistema anota la operación pendiente en un área especial llamada <strong>journal (diario)</strong>. El proceso es:</p>
+      <ol>
+        <li>Escribir la intención de la operación en el journal.</li>
+        <li>Ejecutar la operación real en el disco.</li>
+        <li>Marcar la entrada del journal como completada.</li>
+      </ol>
+      <p>Si el sistema falla en el paso 2, al reiniciar el kernel lee el journal, detecta la operación incompleta y la completa o deshace. Sin journaling, una escritura incompleta puede dejar el filesystem en estado inconsistente.</p>
+      <h4>Niveles de journaling en ext4</h4>
+      <ul>
+        <li><code>journal</code>: registra datos Y metadatos. Máxima protección, más lento.</li>
+        <li><code>ordered</code> (por defecto): solo metadatos, pero garantiza que los datos se escriben antes. Buen equilibrio.</li>
+        <tr><td><code>writeback</code>: solo metadatos, sin garantía de orden. Más rápido, menos seguro.</td></tr>
+      </ul>
+    </div>
+
+    <h3>COW — Copy On Write</h3>
+    <p><strong>Copy-on-Write</strong> es una estrategia usada por Btrfs y ZFS donde al modificar un bloque de datos, en lugar de sobreescribirlo, se escribe la nueva versión en un bloque nuevo y se actualiza el árbol de metadatos para apuntar al nuevo bloque. El bloque original permanece intacto hasta que se libera.</p>
+    <ul>
+      <li><strong>Ventaja:</strong> los snapshots son instantáneos y casi gratuitos (solo se copia lo que cambia).</li>
+      <li><strong>Ventaja:</strong> permite detectar corrupción silenciosa mediante checksums.</li>
+      <li><strong>Ventaja:</strong> el sistema nunca está en estado inconsistente (o tienes la versión vieja, o la nueva, nunca a medias).</li>
+      <li><strong>Inconveniente:</strong> fragmentación a largo plazo, overhead en escrituras aleatorias.</li>
+    </ul>
+
+    <h3 id="fstab">Montaje automático — /etc/fstab</h3>
+    <p>Para que un filesystem se monte <strong>automáticamente en cada arranque</strong>, hay que añadir una entrada en <code>/etc/fstab</code>.</p>
+    <pre><span class="cm"># Formato: &lt;dispositivo&gt;  &lt;punto-montaje&gt;  &lt;tipo&gt;  &lt;opciones&gt;  &lt;dump&gt;  &lt;pass&gt;</span>
+UUID=7e32f35e-ab12   /              ext4    defaults        0       1
+UUID=a1b2c3d4-ef56   /boot          xfs     defaults        0       2
+UUID=f0e1d2c3-b4a5   /home          ext4    defaults        0       2
+UUID=11223344-5566   swap           swap    defaults        0       0
+tmpfs                /tmp           tmpfs   defaults,noatime,size=2G  0  0</pre>
+
+    <div class="card">
+      <h4>Campo dump (5º campo)</h4>
+      <p>Indica si el programa <code>dump</code> (herramienta antigua de backup) debe respaldar este filesystem.</p>
+      <ul>
+        <li><code>0</code> — No hacer backup con dump (valor habitual hoy)</li>
+        <li><code>1</code> — Hacer backup con dump</li>
+      </ul>
+      <h4>Campo pass (6º campo)</h4>
+      <p>Determina el orden en que <code>fsck</code> comprueba la integridad de los filesystems al arrancar.</p>
+      <ul>
+        <li><code>0</code> — No comprobar (swap, tmpfs, filesystems de red)</li>
+        <li><code>1</code> — Comprobar primero (reservado para <code>/</code> — raíz)</li>
+        <li><code>2</code> — Comprobar después de los "1" (resto de particiones locales)</li>
+      </ul>
+    </div>
+
+    <pre><span class="cm"># Identificar dispositivos por UUID (más estable que /dev/sdX)</span>
+blkid
+lsblk -f
+
+<span class="cm"># Probar /etc/fstab sin reiniciar</span>
+mount -a   <span class="cm"># monta todo lo que esté en fstab y no esté montado</span>
+
+<span class="cm"># Montar/desmontar manualmente</span>
+mount -t ext4 /dev/sdb1 /mnt/datos
+umount /mnt/datos</pre>
+
+    <h3 id="lsof-umount">lsof para liberar un punto de montaje</h3>
+    <p>Si <code>umount</code> falla con "device is busy", significa que hay procesos usando ficheros en ese filesystem.</p>
+    <pre><span class="cm"># Ver qué procesos tienen abiertos ficheros en /mnt/datos</span>
+lsof /mnt/datos
+lsof +D /mnt/datos   <span class="cm"># recursivo</span>
+
+<span class="cm"># Ver qué proceso está usando un fichero concreto</span>
+lsof /mnt/datos/fichero.log
+
+<span class="cm"># Matar los procesos que bloquean el unmount</span>
+fuser -km /mnt/datos   <span class="cm"># mata TODOS los procesos que usan ese mount</span>
+fuser -v /mnt/datos    <span class="cm"># solo listar (sin matar)</span>
+
+<span class="cm"># Ahora se puede desmontar</span>
+umount /mnt/datos
+
+<span class="cm"># Unmount lazy (espera a que terminen los procesos)</span>
+umount -l /mnt/datos   <span class="cm"># desconecta el filesystem pero permite que los procesos terminen</span></pre>
+
+    <h3>FHS — Filesystem Hierarchy Standard</h3>
+    <table>
+      <thead><tr><th>Dir</th><th>Contenido</th><th>Dir</th><th>Contenido</th></tr></thead>
+      <tbody>
+        <tr><td><code>/boot</code></td><td>Kernel, initrd, GRUB</td><td><code>/var</code></td><td>Logs, spool, mail (variable)</td></tr>
+        <tr><td><code>/etc</code></td><td>Configuración del sistema</td><td><code>/tmp</code></td><td>Temporal (se borra al reiniciar)</td></tr>
+        <tr><td><code>/home</code></td><td>Directorios de usuarios</td><td><code>/run</code></td><td>Runtime desde boot (tmpfs)</td></tr>
+        <tr><td><code>/bin</code> <code>/sbin</code></td><td>Binarios esenciales</td><td><code>/usr</code></td><td>Programas, libs (read-only)</td></tr>
+        <tr><td><code>/dev</code></td><td>Ficheros de dispositivo</td><td><code>/opt</code></td><td>Software adicional/terceros</td></tr>
+        <tr><td><code>/proc</code></td><td>Pseudo-FS: procesos/kernel</td><td><code>/mnt</code></td><td>Puntos de montaje manuales</td></tr>
+        <tr><td><code>/sys</code></td><td>Pseudo-FS: hardware</td><td><code>/media</code></td><td>Medios extraíbles (automount)</td></tr>
+      </tbody>
+    </table>
+
+    <hr class="sep">
+
+    <!-- FICHEROS EN LINUX -->
+    <div class="topic-header" id="ficheros-linux">
+      <div class="topic-num">09</div>
+      <h2>Ficheros en Linux</h2>
+    </div>
+
+    <h3>Tipos de fichero</h3>
+    <table>
+      <thead><tr><th>Símbolo ls</th><th>Tipo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><code>-</code></td><td>Fichero regular</td><td>Texto, binario, scripts…</td></tr>
+        <tr><td><code>d</code></td><td>Directorio</td><td>Fichero especial que contiene entradas (nombre→inode)</td></tr>
+        <tr><td><code>l</code></td><td>Enlace simbólico</td><td>Puntero a otro fichero/directorio</td></tr>
+        <tr><td><code>b</code></td><td>Dispositivo bloque</td><td>HDD, SSD, USB (acceso en bloques)</td></tr>
+        <tr><td><code>c</code></td><td>Dispositivo carácter</td><td>TTY, <code>/dev/null</code>, <code>/dev/random</code></td></tr>
+        <tr><td><code>p</code></td><td>FIFO/Named pipe</td><td>Canal de comunicación entre procesos</td></tr>
+        <tr><td><code>s</code></td><td>Socket</td><td>Comunicación inter-proceso (ej. MySQL)</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Inodo — metadatos del fichero</h4>
+    <p>Cada fichero tiene un <strong>inode</strong> que almacena: tipo, permisos, UID/GID, timestamps (atime, mtime, ctime), tamaño y punteros a bloques de datos. <em>El nombre del fichero NO está en el inode</em>, está en el directorio que lo contiene.</p>
+    <pre>ls -li          <span class="cm"># ver número de inode</span>
+stat fichero    <span class="cm"># todos los metadatos del inode</span>
+df -i           <span class="cm"># inodos disponibles/usados por filesystem</span></pre>
+
+    <h3 id="enlaces">Enlace duro vs Enlace simbólico</h3>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Enlace duro (Hard link)</h4>
+        <p>Crea una <strong>nueva entrada de directorio apuntando al mismo inode</strong>. El fichero tiene dos (o más) nombres.</p>
+        <ul>
+          <li>Mismo inode → mismos datos, mismos metadatos, mismos permisos.</li>
+          <li>El fichero real solo se borra cuando el <strong>contador de enlaces llega a 0</strong>.</li>
+          <li>No puede apuntar a directorios (evita ciclos).</li>
+          <li>No puede cruzar filesystems distintos (el inode es local al FS).</li>
+        </ul>
+        <pre>ln fichero_original enlace_duro
+ls -li  <span class="cm"># mismo inode, nlink=2</span></pre>
+      </div>
+      <div class="card">
+        <h4>Enlace simbólico (Soft link / Symlink)</h4>
+        <p>Crea un <strong>fichero nuevo</strong> cuyo contenido es la <strong>ruta del objetivo</strong>. Es como un acceso directo.</p>
+        <ul>
+          <li>Inode propio y distinto al del objetivo.</li>
+          <li>Si se borra el objetivo, el enlace queda <em>roto</em> (dangling symlink).</li>
+          <li>Puede apuntar a directorios.</li>
+          <li>Puede cruzar filesystems y particiones.</li>
+          <li>Los permisos del symlink no importan; lo que cuenta son los del destino.</li>
+        </ul>
+        <pre>ln -s /ruta/objetivo nombre_enlace
+ls -la  <span class="cm"># muestra → /ruta/objetivo</span>
+readlink -f enlace  <span class="cm"># resolver ruta real</span></pre>
+      </div>
+    </div>
+
+    <h3 id="sticky">Sticky bit — ¿qué hace exactamente?</h3>
+    <p>El <strong>sticky bit</strong> en un directorio indica que, aunque cualquier usuario pueda crear ficheros en él (si tiene <code>w</code> sobre el directorio), <strong>solo el propietario del fichero puede borrarlo o renombrarlo</strong>.</p>
+    <p>El ejemplo clásico es <code>/tmp</code>: todos los usuarios pueden crear ficheros temporales, pero nadie puede borrar los ficheros de otro usuario.</p>
+    <pre>ls -ld /tmp
+<span class="kw">drwxrwxrwt</span> 10 root root  <span class="cm"># la 't' al final = sticky bit activo</span>
+
+chmod +t directorio     <span class="cm"># activar sticky bit</span>
+chmod 1777 directorio   <span class="cm"># rwxrwxrwx + sticky = 1777</span></pre>
+    <div class="callout info">
+      <span class="callout-icon">ℹ️</span>
+      <div>Históricamente el sticky bit en ficheros ejecutables indicaba "mantener en swap después de ejecutar". Hoy en día ese comportamiento está obsoleto; el sticky bit solo tiene efecto sobre directorios.</div>
+    </div>
+
+    <h3 id="dirs-perms">Directorios como ficheros — permisos</h3>
+    <p>En Linux, <strong>todo es un fichero</strong>, incluidos los directorios. Un directorio es un fichero especial cuyo contenido es una <strong>tabla de pares (nombre → número de inode)</strong>. Por eso también tienen permisos rwx, pero con significado distinto:</p>
+    <table>
+      <thead><tr><th>Permiso</th><th>Sobre fichero regular</th><th>Sobre directorio</th></tr></thead>
+      <tbody>
+        <tr><td><code>r</code> (4)</td><td>Leer contenido del fichero</td><td>Listar el contenido (<code>ls</code>)</td></tr>
+        <tr><td><code>w</code> (2)</td><td>Modificar el fichero</td><td>Crear, borrar o renombrar ficheros <strong>dentro</strong></td></tr>
+        <tr><td><code>x</code> (1)</td><td>Ejecutar como programa</td><td>Entrar al directorio (<code>cd</code>), acceder a ficheros dentro</td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Caso tricky:</strong> si tienes <code>r</code> pero no <code>x</code> sobre un directorio, puedes listar los nombres de los ficheros pero no acceder a ellos ni ver sus metadatos. Si tienes <code>x</code> pero no <code>r</code>, puedes acceder a ficheros si conoces su nombre exacto, pero no puedes listarlos.</div>
+    </div>
+    <pre><span class="cm"># Permisos habituales</span>
+chmod 755 directorio  <span class="cm"># rwxr-xr-x: propietario todo, resto leer+entrar</span>
+chmod 700 directorio  <span class="cm"># rwx------: solo el propietario</span>
+chmod 644 fichero     <span class="cm"># rw-r--r--: propietario leer+escribir, resto solo leer</span>
+umask 022             <span class="cm"># máscara: dirs=755, ficheros=644</span></pre>
+
+    <hr class="sep">
+
+    <!-- PARTICIONES / LVM / RAID -->
+    <div class="topic-header" id="particiones">
+      <div class="topic-num">10</div>
+      <h2>Particiones / LVM / RAID</h2>
+    </div>
+
+    <h3 id="mbr-gpt">MBR vs GPT</h3>
+    <table>
+      <thead><tr><th>Característica</th><th>MBR</th><th>GPT</th></tr></thead>
+      <tbody>
+        <tr><td>Ubicación de metadatos</td><td>Solo en el <strong>sector 0</strong> del disco (512 bytes). Un solo punto de fallo: si se corrompe ese sector, se pierde toda la tabla de particiones.</td><td>Tabla de particiones en el inicio Y una <strong>copia de respaldo al final del disco</strong>. Si la primaria se corrompe, se puede recuperar desde la copia.</td></tr>
+        <tr><td>Tamaño máximo disco</td><td>2 TB</td><td>&gt;9 ZB (teórico)</td></tr>
+        <tr><td>Particiones primarias</td><td>4 (o 3 + 1 extendida con lógicas)</td><td>128 (sin distinción primaria/extendida)</td></tr>
+        <tr><td>Compatibilidad firmware</td><td>BIOS</td><td>UEFI (aunque puede funcionar con BIOS en modo CSM)</td></tr>
+        <tr><td>Identificación</td><td>No tiene identificadores únicos</td><td>Cada partición tiene un GUID único (PARTUUID)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="lvm">LVM — Logical Volume Manager</h3>
+    <div class="card">
+      <p><strong>PV</strong> (Physical Volume) → varios PVs se agrupan en un <strong>VG</strong> (Volume Group) → el VG se divide en <strong>LVs</strong> (Logical Volumes) → cada LV se formatea con un FS y se monta.</p>
+    </div>
+    <pre><span class="cm"># Flujo completo</span>
+pvcreate /dev/sdb                     <span class="cm"># inicializar disco como PV</span>
+vgcreate mi_vg /dev/sdb               <span class="cm"># crear VG</span>
+lvcreate -L 100G -n datos_lv mi_vg   <span class="cm"># crear LV de 100GB</span>
+mkfs.ext4 /dev/mi_vg/datos_lv        <span class="cm"># formatear</span>
+mount /dev/mi_vg/datos_lv /datos     <span class="cm"># montar</span>
+
+<span class="cm"># Extender sin desmontar</span>
+pvcreate /dev/sdc
+vgextend mi_vg /dev/sdc
+lvextend -l +100%FREE /dev/mi_vg/datos_lv
+resize2fs /dev/mi_vg/datos_lv        <span class="cm"># ext4</span>
+xfs_growfs /datos                    <span class="cm"># XFS</span>
+
+pvs; vgs; lvs                        <span class="cm"># estado</span></pre>
+
+    <h3 id="raid">RAID</h3>
+    <table>
+      <thead><tr><th>Nivel</th><th>Mín. discos</th><th>Ventaja</th><th>Fallo máx.</th><th>Espacio útil</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-r">RAID 0</span> Striping</td><td>2</td><td>Máxima velocidad</td><td>0 (ninguno)</td><td>100%</td></tr>
+        <tr><td><span class="badge badge-g">RAID 1</span> Mirror</td><td>2</td><td>Redundancia total</td><td>N-1 discos</td><td>50%</td></tr>
+        <tr><td><span class="badge badge-b">RAID 5</span> Paridad dist.</td><td>3</td><td>Balance vel/redund.</td><td>1 disco</td><td>(N-1)/N</td></tr>
+        <tr><td><span class="badge badge-p">RAID 6</span> Doble paridad</td><td>4</td><td>Alta redundancia</td><td>2 discos</td><td>(N-2)/N</td></tr>
+        <tr><td><span class="badge badge-y">RAID 10</span> Mirror+Stripe</td><td>4</td><td>Velocidad + redund.</td><td>1 por par</td><td>50%</td></tr>
+      </tbody>
+    </table>
+    <pre>mdadm --create /dev/md0 --level=5 \
+  --raid-devices=3 /dev/sdb /dev/sdc /dev/sdd
+cat /proc/mdstat
+mdadm --detail /dev/md0</pre>
+
+    <h3 id="quotas">Quotas de disco — soft y hard limit</h3>
+    <p>Las quotas permiten limitar el espacio en disco que puede usar cada usuario o grupo.</p>
+    <div class="card-grid">
+      <div class="card">
+        <h4>Soft limit</h4>
+        <p>Límite "blando". El usuario puede <strong>superarlo temporalmente</strong> durante un período de gracia (normalmente 7 días). Si no reduce el uso antes de que expire, el soft limit se convierte en hard limit.</p>
+        <p>Sirve como aviso: el sistema le notifica que está cerca de su límite.</p>
+      </div>
+      <div class="card">
+        <h4>Hard limit</h4>
+        <p>Límite "duro". <strong>No se puede superar bajo ninguna circunstancia.</strong> Si el usuario intenta escribir más datos una vez alcanzado el hard limit, recibe un error "Disk quota exceeded" y la operación falla.</p>
+      </div>
+    </div>
+    <pre><span class="cm"># 1. Añadir opciones en /etc/fstab para /home:</span>
+<span class="cm">#    UUID=xxx /home ext4 defaults,usrquota,grpquota 0 2</span>
+mount -o remount /home
+quotacheck -uvgm /home          <span class="cm"># crear ficheros de cuota</span>
+quotaon -uvga                   <span class="cm"># activar cuotas</span>
+
+<span class="cm"># Establecer cuotas de usuario</span>
+<span class="cm"># setquota -u usuario soft_bloques hard_bloques soft_inodos hard_inodos mountpoint</span>
+setquota -u usuario 100M 120M 100 120 /home
+<span class="cm"># → soft=100MB hard=120MB (bloques) soft=100 hard=120 (inodos)</span>
+
+edquota -u usuario              <span class="cm"># editar cuota interactivamente</span>
+quota -s usuario                <span class="cm"># ver uso actual del usuario</span>
+repquota /home                  <span class="cm"># informe de todas las cuotas de /home</span></pre>
+
+    <hr class="sep">
+
+    <!-- BACKUP -->
+    <div class="topic-header" id="backup">
+      <div class="topic-num">11</div>
+      <h2>Backup</h2>
+    </div>
+
+    <h3>Regla 3-2-1-1-0</h3>
+    <div class="card">
+      <ul>
+        <li><strong>3</strong> copias de los datos</li>
+        <li><strong>2</strong> medios de almacenamiento diferentes (NAS + nube, HDD + cinta…)</li>
+        <li><strong>1</strong> copia fuera de las instalaciones (offsite)</li>
+        <li><strong>1</strong> copia inmutable o air-gapped (no modificable por ransomware)</li>
+        <li><strong>0</strong> errores verificados al restaurar (¡probar siempre!)</li>
+      </ul>
+    </div>
+    <p><strong>RPO</strong> (Recovery Point Objective): máxima pérdida de datos aceptable (tiempo desde el último backup). <strong>RTO</strong> (Recovery Time Objective): máximo tiempo tolerable para restaurar el servicio.</p>
+
+    <h3 id="tipos-backup">Tipos de backup</h3>
+    <table>
+      <thead><tr><th>Tipo</th><th>Qué copia</th><th>Velocidad backup</th><th>Velocidad restore</th><th>Espacio</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-r">Full</span></td><td>Todo siempre</td><td>Lento</td><td>Rápido (1 fichero)</td><td>Mucho (redundancia)</td></tr>
+        <tr><td><span class="badge badge-y">Incremental</span></td><td>Cambios desde el último backup (full o incremental)</td><td>Rápido</td><td>Lento (Full + todos los Inc.)</td><td>Mínimo</td></tr>
+        <tr><td><span class="badge badge-g">Diferencial</span></td><td>Cambios desde el último Full</td><td>Medio</td><td>Medio (Full + último Dif.)</td><td>Medio</td></tr>
+        <tr><td><span class="badge badge-p">Snapshot</span></td><td>Estado completo en un momento</td><td>Casi instantáneo</td><td>Muy rápido</td><td>Bajo (COW)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>Snapshot vs Backup Full</h4>
+        <p><strong>Snapshot:</strong> usa COW para capturar el estado del filesystem en un instante. Es casi instantáneo y ocupa poco espacio inicialmente (solo almacena los bloques que cambian posteriormente). Vive en el <em>mismo disco</em> que los datos originales — no protege contra fallo de hardware.</p>
+        <p><strong>Backup Full:</strong> copia todos los datos a un <em>medio separado</em>. Lento y ocupa mucho espacio, pero protege contra fallo del disco original, borrado accidental y desastres.</p>
+        <p>→ Los snapshots complementan los backups pero no los reemplazan.</p>
+      </div>
+      <div class="card">
+        <h4>Estrategia combinada típica</h4>
+        <ul>
+          <li>Snapshot cada hora (para recuperación rápida de ficheros borrados)</li>
+          <li>Backup incremental diario (a NAS o nube)</li>
+          <li>Backup full semanal (a cinta o almacenamiento offsite)</li>
+          <li>Verificación de restore mensual</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 id="tar">tar — opciones y parámetros</h3>
+    <p><code>tar</code> (Tape ARchive) crea ficheros comprimidos que agrupan múltiples ficheros preservando estructura de directorios, permisos y propietarios.</p>
+    <pre><span class="cm"># Sintaxis: tar [OPCIONES] [ARCHIVO.tar.gz] [ORIGEN]</span>
+tar -czvf /backup/home.tar.gz /home   <span class="cm"># crear comprimido con gzip</span>
+tar -cjvf /backup/home.tar.bz2 /home  <span class="cm"># crear comprimido con bzip2 (más compresión, más lento)</span>
+tar -cJvf /backup/home.tar.xz /home   <span class="cm"># crear comprimido con xz (mejor compresión)</span>
+tar -xzvf /backup/home.tar.gz -C /dst/ <span class="cm"># extraer en /dst/</span>
+tar -tvf /backup/home.tar.gz           <span class="cm"># listar contenido sin extraer</span>
+tar -xzvf archivo.tar.gz fichero.txt   <span class="cm"># extraer solo un fichero</span></pre>
+
+    <table>
+      <thead><tr><th>Opción</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><code>-c</code></td><td>Create — crear nuevo archivo</td></tr>
+        <tr><td><code>-x</code></td><td>eXtract — extraer archivo</td></tr>
+        <tr><td><code>-t</code></td><td>lisT — listar contenido</td></tr>
+        <tr><td><code>-v</code></td><td>Verbose — mostrar ficheros procesados</td></tr>
+        <tr><td><code>-f archivo</code></td><td>File — nombre del archivo tar (obligatorio)</td></tr>
+        <tr><td><code>-z</code></td><td>gZip — comprimir/descomprimir con gzip</td></tr>
+        <tr><td><code>-j</code></td><td>bzip2 — comprimir/descomprimir con bzip2</td></tr>
+        <tr><td><code>-J</code></td><td>xz — comprimir/descomprimir con xz</td></tr>
+        <tr><td><code>-C directorio</code></td><td>Change dir — extraer en ese directorio</td></tr>
+        <tr><td><code>-p</code></td><td>Preserve permissions — mantener permisos originales</td></tr>
+        <tr><td><code>--exclude=patrón</code></td><td>Excluir ficheros que coincidan con el patrón</td></tr>
+        <tr><td><code>--newer fichero</code></td><td>Solo ficheros más nuevos que el fichero de referencia</td></tr>
+        <tr><td><code>-g snapshot</code></td><td>Backup incremental usando fichero de snapshot</td></tr>
+      </tbody>
+    </table>
+    <pre><span class="cm"># Backup incremental con tar</span>
+tar -czg /backup/snapshot.snar -f /backup/full.tar.gz /datos  <span class="cm"># full</span>
+tar -czg /backup/snapshot.snar -f /backup/inc1.tar.gz /datos  <span class="cm"># incremental</span>
+
+<span class="cm"># Excluir directorios</span>
+tar -czvf backup.tar.gz /home --exclude=/home/*/cache --exclude=*.tmp
+
+<span class="cm"># Backup a través de SSH directamente</span>
+tar -czf - /home | ssh usuario@servidor "cat > /backup/home.tar.gz"</pre>
+
+    <h3 id="rsync">rsync — sincronización eficiente</h3>
+    <p><code>rsync</code> (Remote Sync) es ideal para <strong>backups incrementales</strong> porque solo transfiere los bloques que han cambiado, no los ficheros completos. Compara origen y destino mediante checksums y tamaño/fecha.</p>
+
+    <h4>¿Cuándo usar rsync?</h4>
+    <ul>
+      <li>Backups incrementales diarios donde los datos cambian poco.</li>
+      <li>Sincronizar directorios entre servidores.</li>
+      <li>Migrar datos entre máquinas preservando permisos y timestamps.</li>
+      <li>Cuando se necesita reanudar transferencias interrumpidas.</li>
+    </ul>
+    <pre><span class="cm"># Sincronización local</span>
+rsync -av /home/ /backup/home/             <span class="cm"># básica</span>
+rsync -avz /home/ /backup/home/            <span class="cm"># con compresión en tránsito</span>
+rsync -av --delete /home/ /backup/home/   <span class="cm"># borrar en destino lo que no está en origen</span>
+
+<span class="cm"># Sincronización remota por SSH</span>
+rsync -avz -e ssh /home/ user@servidor:/backup/home/
+rsync -avz -e "ssh -p 2222" /home/ user@servidor:/backup/
+
+<span class="cm"># Opciones avanzadas</span>
+rsync -av --dry-run /home/ /backup/       <span class="cm"># simulación sin cambios reales</span>
+rsync -av --progress /home/ /backup/      <span class="cm"># ver progreso de cada fichero</span>
+rsync -av --bwlimit=5000 /home/ /backup/  <span class="cm"># limitar ancho de banda (5 MB/s)</span>
+rsync -av --exclude="*.tmp" /home/ /bck/  <span class="cm"># excluir ficheros</span>
+rsync -av --backup --backup-dir=/bck/old /src/ /dst/  <span class="cm"># mover sobreescritos a old/</span></pre>
+
+    <table>
+      <thead><tr><th>Opción</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><code>-a</code> (archive)</td><td>Equivale a -rlptgoD: recursivo + preserva links, permisos, timestamps, grupos, propietarios, ficheros especiales</td></tr>
+        <tr><td><code>-v</code></td><td>Verbose — mostrar ficheros transferidos</td></tr>
+        <tr><td><code>-z</code></td><td>Comprimir datos en tránsito (útil en redes lentas)</td></tr>
+        <tr><td><code>-e ssh</code></td><td>Usar SSH como transporte</td></tr>
+        <tr><td><code>--delete</code></td><td>Borrar en destino los ficheros que no existen en origen</td></tr>
+        <tr><td><code>--dry-run</code> / <code>-n</code></td><td>Simulación sin hacer cambios reales</td></tr>
+        <tr><td><code>--checksum</code></td><td>Comparar por checksum en lugar de tamaño+fecha</td></tr>
+        <tr><td><code>--progress</code></td><td>Mostrar progreso por fichero</td></tr>
+        <tr><td><code>--bwlimit=N</code></td><td>Limitar ancho de banda a N KB/s</td></tr>
+        <tr><td><code>--exclude=patrón</code></td><td>Excluir ficheros</td></tr>
+        <tr><td><code>-P</code></td><td>Equivale a --progress --partial (reanudar transferencias)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout danger">
+      <span class="callout-icon">🚨</span>
+      <div><strong>Ojo con la barra final en rsync:</strong> <code>rsync -av /home/ /bck/</code> sincroniza el <em>contenido</em> de /home. <code>rsync -av /home /bck/</code> (sin barra) crea <code>/bck/home/</code>. ¡La barra importa!</div>
+    </div>
+
+  </section>
+
+  <div style="margin-top:80px; padding-top:32px; border-top:1px solid var(--border); color:var(--muted); font-size:12px; text-align:center;">
+    Administración de Sistemas 2026 · Guía de estudio v2 — Seguridad · Configuración Base · Almacenamiento
+  </div>
+
+</main>
+</body>
+</html>
