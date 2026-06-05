@@ -1,0 +1,2638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Estudio · Redes de Computadores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-soft: #0f0f0f;
+    --card: #131313;
+    --card-hi: #1a1a1a;
+    --ink: #ededed;
+    --ink-soft: #a1a1aa;
+    --muted: #737373;
+    --rule: #262626;
+    --rule-hi: #404040;
+    --accent: #fb923c;        /* warm orange */
+    --accent-soft: rgba(251, 146, 60, 0.10);
+    --accent-border: rgba(251, 146, 60, 0.30);
+    --teal: #38bdf8;          /* sky */
+    --teal-soft: rgba(56, 189, 248, 0.10);
+    --teal-border: rgba(56, 189, 248, 0.28);
+    --gold: #fbbf24;          /* amber */
+    --gold-soft: rgba(251, 191, 36, 0.10);
+    --gold-border: rgba(251, 191, 36, 0.28);
+    --highlight: rgba(251, 191, 36, 0.20);
+    --code-bg: #000;
+    --code-fg: #ededed;
+    --shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 8px 24px -12px rgba(0,0,0,0.7);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15.5px;
+    line-height: 1.65;
+    font-feature-settings: 'kern','ss01','cv11';
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Subtle ambient glow */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 800px 400px at 80% -10%, rgba(251,146,60,0.06), transparent 60%),
+      radial-gradient(ellipse 600px 400px at -10% 30%, rgba(56,189,248,0.04), transparent 60%);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 0;
+    max-width: 1320px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Sidebar */
+  aside.toc {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 32px 24px 32px 32px;
+    border-right: 1px solid var(--rule);
+    background: var(--bg);
+    font-family: 'Geist', sans-serif;
+  }
+  aside.toc::-webkit-scrollbar { width: 6px; }
+  aside.toc::-webkit-scrollbar-track { background: transparent; }
+  aside.toc::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+  aside.toc::-webkit-scrollbar-thumb:hover { background: var(--rule-hi); }
+
+  aside.toc .brand {
+    font-family: 'Geist', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  aside.toc .brand em {
+    font-style: normal;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  aside.toc .subtitle {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+    font-weight: 500;
+  }
+  aside.toc nav ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: tema;
+  }
+  aside.toc nav > ol > li {
+    margin-bottom: 14px;
+    counter-increment: tema;
+  }
+  aside.toc nav > ol > li > a {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+    font-weight: 500;
+    font-size: 13.5px;
+    line-height: 1.3;
+    padding: 4px 0;
+    letter-spacing: -0.01em;
+    transition: color 0.15s;
+  }
+  aside.toc nav > ol > li > a::before {
+    content: counter(tema, decimal-leading-zero);
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  aside.toc nav > ol > li > a:hover { color: var(--accent); }
+  aside.toc nav ul {
+    list-style: none;
+    padding: 4px 0 0 26px;
+    margin: 0;
+    border-left: 1px solid var(--rule);
+    margin-left: 6px;
+  }
+  aside.toc nav ul li a {
+    display: block;
+    padding: 3px 10px;
+    text-decoration: none;
+    color: var(--muted);
+    font-family: 'Geist', sans-serif;
+    font-size: 12.5px;
+    line-height: 1.45;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    margin-left: -1px;
+  }
+  aside.toc nav ul li a:hover {
+    color: var(--ink);
+    border-left-color: var(--accent);
+  }
+
+  /* Main */
+  main {
+    padding: 64px 64px 120px 64px;
+    max-width: 920px;
+  }
+
+  /* Hero */
+  .hero {
+    margin-bottom: 80px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero .eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+  .hero h1 {
+    font-family: 'Geist', sans-serif;
+    font-weight: 700;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    margin: 0 0 24px 0;
+    color: var(--ink);
+  }
+  .hero h1 em {
+    font-style: normal;
+    font-weight: 300;
+    color: var(--ink-soft);
+    letter-spacing: -0.04em;
+  }
+  .hero .lead {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    margin: 0 0 28px 0;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+  .hero .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .hero .meta span strong { color: var(--ink); font-weight: 600; }
+
+  /* Topic section */
+  section.tema {
+    margin-bottom: 112px;
+    counter-reset: subsection;
+  }
+  section.tema > .tema-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: baseline;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  section.tema > .tema-header .num {
+    font-family: 'Geist Mono', monospace;
+    font-weight: 600;
+    font-size: 64px;
+    line-height: 0.85;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+  }
+  section.tema > .tema-header h2 {
+    font-family: 'Geist', sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin: 0 0 10px 0;
+  }
+  section.tema > .tema-header .desc {
+    font-size: 16px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 400;
+    letter-spacing: -0.012em;
+  }
+
+  section.tema h3 {
+    font-family: 'Geist', sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    margin: 56px 0 16px 0;
+    padding-top: 8px;
+    counter-increment: subsection;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  section.tema h3::before {
+    content: counter(subsection, decimal-leading-zero);
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  section.tema h4 {
+    font-family: 'Geist', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.3;
+    margin: 32px 0 12px 0;
+    color: var(--teal);
+    letter-spacing: -0.015em;
+  }
+
+  p { margin: 0 0 16px 0; color: var(--ink-soft); }
+  p strong, li strong, dd strong, td strong { color: var(--ink); font-weight: 600; }
+  p { letter-spacing: -0.011em; }
+
+  ul, ol { padding-left: 22px; margin: 0 0 16px 0; color: var(--ink-soft); }
+  li { margin-bottom: 6px; letter-spacing: -0.011em; }
+  li::marker { color: var(--accent); }
+
+  em { font-style: italic; color: var(--ink); }
+
+  /* Inline code */
+  code {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.86em;
+    background: var(--card);
+    color: var(--accent);
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--rule);
+    white-space: nowrap;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  /* Block code */
+  pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 18px 20px;
+    border-radius: 6px;
+    border: 1px solid var(--rule);
+    overflow-x: auto;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 20px 0;
+    position: relative;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+    white-space: pre;
+    font-weight: inherit;
+  }
+  pre::before {
+    content: attr(data-label);
+    position: absolute;
+    top: 8px;
+    right: 14px;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* Callouts */
+  .callout {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-left: 2px solid var(--accent);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+  .callout .label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .callout.tip {
+    border-left-color: var(--teal);
+    background: linear-gradient(180deg, var(--teal-soft), transparent 80%), var(--card);
+  }
+  .callout.tip .label { color: var(--teal); }
+  .callout.warn {
+    border-left-color: var(--gold);
+    background: linear-gradient(180deg, var(--gold-soft), transparent 80%), var(--card);
+  }
+  .callout.warn .label { color: var(--gold); }
+  .callout.example {
+    border-left-color: var(--teal);
+    background: linear-gradient(180deg, var(--teal-soft), transparent 80%), var(--card);
+  }
+  .callout.example .label { color: var(--teal); }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout p { color: var(--ink-soft); }
+
+  /* Tables */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: 6px;
+    border: 1px solid var(--rule);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    font-size: 13.5px;
+    font-family: 'Geist', sans-serif;
+    letter-spacing: -0.011em;
+  }
+  th, td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    color: var(--ink-soft);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  th {
+    background: var(--card-hi);
+    font-family: 'Geist Mono', monospace;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: 1px solid var(--rule-hi);
+  }
+  tbody tr:hover { background: var(--card-hi); }
+  td code { font-size: 12px; white-space: nowrap; }
+  td strong { color: var(--ink); }
+
+  /* Diagram container */
+  .diagram {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px;
+    margin: 24px 0;
+    text-align: center;
+  }
+  .diagram svg { max-width: 100%; height: auto; }
+  .diagram .caption {
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: var(--muted);
+    font-family: 'Geist', sans-serif;
+    line-height: 1.45;
+    letter-spacing: -0.005em;
+  }
+
+  /* Grid utilities */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  @media (max-width: 720px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  /* Quick facts box */
+  .facts {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin: 20px 0;
+  }
+  .facts .label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .facts ul { margin: 0; padding-left: 18px; }
+  .facts li { margin-bottom: 6px; font-size: 14px; }
+
+  /* Formula card */
+  .formula {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 18px 22px;
+    border-radius: 6px;
+    border: 1px solid var(--rule);
+    margin: 16px 0;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    line-height: 1.75;
+    position: relative;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .formula::before {
+    content: "ƒx";
+    position: absolute;
+    top: 10px;
+    right: 16px;
+    font-family: 'Geist Mono', monospace;
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    opacity: 0.6;
+  }
+  .formula .var { color: #fb923c; }
+  .formula .op  { color: var(--ink); }
+  .formula .num { color: #fbbf24; }
+  .formula .com { color: var(--muted); font-style: italic; }
+
+  /* Definition list style */
+  dl.terms {
+    margin: 16px 0;
+    display: grid;
+    grid-template-columns: minmax(120px, 200px) 1fr;
+    gap: 8px 24px;
+  }
+  dl.terms dt {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--teal);
+    padding-top: 3px;
+    letter-spacing: 0;
+  }
+  dl.terms dd { margin: 0 0 6px 0; font-size: 14.5px; color: var(--ink-soft); letter-spacing: -0.011em; }
+
+  /* Anchor offset for sticky scroll */
+  section[id], h3[id] { scroll-margin-top: 24px; }
+
+  /* Footer */
+  footer.foot {
+    margin-top: 96px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    font-weight: 500;
+  }
+  footer.foot span { color: var(--accent); }
+
+  /* Mobile */
+  @media (max-width: 980px) {
+    .layout { grid-template-columns: 1fr; }
+    aside.toc {
+      position: static;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--rule);
+    }
+    main { padding: 32px 24px 80px 24px; }
+  }
+
+  /* Print friendly */
+  @media print {
+    body::before { display: none; }
+    aside.toc { display: none; }
+    .layout { display: block; }
+    main { padding: 0; max-width: none; }
+  }
+
+  /* Small details */
+  .pill {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .pill.teal { background: var(--teal-soft); color: var(--teal); border-color: var(--teal-border); }
+  .pill.gold { background: var(--gold-soft); color: var(--gold); border-color: var(--gold-border); }
+
+  .key { background: var(--highlight); padding: 0 4px; color: var(--gold); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<aside class="toc">
+  <div class="brand">Redes de <em>Computadores</em></div>
+  <div class="subtitle">Guía de estudio · 7 temas</div>
+  <nav>
+    <ol>
+      <li><a href="#tema1">Introducción y arquitectura</a>
+        <ul>
+          <li><a href="#t1-conceptos">Terminología básica</a></li>
+          <li><a href="#t1-topologias">Topologías y tipos</a></li>
+          <li><a href="#t1-osi">Modelo OSI</a></li>
+          <li><a href="#t1-tcpip">Modelo TCP/IP</a></li>
+          <li><a href="#t1-encapsulado">Encapsulado</a></li>
+          <li><a href="#t1-dispositivos">Dispositivos por capa</a></li>
+        </ul>
+      </li>
+      <li><a href="#tema2">Capa física</a>
+        <ul>
+          <li><a href="#t2-senales">Señales y Fourier</a></li>
+          <li><a href="#t2-db">dB, SNR y atenuación</a></li>
+          <li><a href="#t2-medios">Medios de transmisión</a></li>
+          <li><a href="#t2-simbolos">Símbolos, baudios y bits</a></li>
+          <li><a href="#t2-codificaciones">Codificaciones</a></li>
+          <li><a href="#t2-nyquist">Nyquist y Shannon</a></li>
+          <li><a href="#t2-modos">Modos de transmisión</a></li>
+        </ul>
+      </li>
+      <li><a href="#tema3">Capa de enlace</a>
+        <ul>
+          <li><a href="#t3-tramas">Tramas y métricas</a></li>
+          <li><a href="#t3-conmutacion">Conmutación</a></li>
+          <li><a href="#t3-mac">Control de acceso (MAC)</a></li>
+          <li><a href="#t3-ethernet">Ethernet</a></li>
+          <li><a href="#t3-errores">Detección de errores</a></li>
+          <li><a href="#t3-arq">ARQ y ventana deslizante</a></li>
+        </ul>
+      </li>
+      <li><a href="#tema4">Capa de red</a>
+        <ul>
+          <li><a href="#t4-intro">Por qué la capa 3</a></li>
+          <li><a href="#t4-ipv4">IPv4 y cabecera</a></li>
+          <li><a href="#t4-direcciones">Direcciones y CIDR</a></li>
+          <li><a href="#t4-arp">ARP y DHCP</a></li>
+          <li><a href="#t4-nat">NAT</a></li>
+          <li><a href="#t4-icmp">ICMP</a></li>
+          <li><a href="#t4-fragmentacion">Fragmentación</a></li>
+          <li><a href="#t4-ipv6">IPv6</a></li>
+          <li><a href="#t4-rutas">Algoritmos de rutas</a></li>
+        </ul>
+      </li>
+      <li><a href="#tema5">Capa de transporte</a>
+        <ul>
+          <li><a href="#t5-puertos">Puertos y servicios</a></li>
+          <li><a href="#t5-udp">UDP</a></li>
+          <li><a href="#t5-tcp">TCP</a></li>
+          <li><a href="#t5-handshake">3-way handshake</a></li>
+          <li><a href="#t5-flujo">Control de flujo</a></li>
+          <li><a href="#t5-timeout">Timeout adaptativo</a></li>
+        </ul>
+      </li>
+      <li><a href="#tema6">QoS y congestión</a>
+        <ul>
+          <li><a href="#t6-qos">Mecanismos QoS</a></li>
+          <li><a href="#t6-diffserv">DiffServ vs IntServ</a></li>
+          <li><a href="#t6-congestion">Control de congestión TCP</a></li>
+          <li><a href="#t6-variantes">Tahoe, Reno, SACK</a></li>
+          <li><a href="#t6-ecn">ECN y RED</a></li>
+        </ul>
+      </li>
+      <li><a href="#tema7">Capas superiores</a>
+        <ul>
+          <li><a href="#t7-sesion">Sesión y presentación</a></li>
+          <li><a href="#t7-http">HTTP</a></li>
+          <li><a href="#t7-dns">DNS</a></li>
+          <li><a href="#t7-smtp">SMTP</a></li>
+          <li><a href="#t7-overlay">Overlays y P2P</a></li>
+        </ul>
+      </li>
+      <li><a href="#repaso">Repaso final y examen</a>
+        <ul>
+          <li><a href="#repaso-tabla">Tabla de repaso</a></li>
+          <li><a href="#repaso-formulas">Formulario</a></li>
+          <li><a href="#repaso-errores">Errores típicos</a></li>
+        </ul>
+      </li>
+    </ol>
+  </nav>
+</aside>
+
+<main>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="eyebrow">Guía completa · 7 temas · diagramas y ejercicios</div>
+  <h1>Redes de <em>Computadores</em></h1>
+  <p class="lead">
+    Cómo se comunican los computadores: del bit que viaja por un cable hasta el HTTP que pinta una página web. Esta guía recorre las siete capas en orden, con diagramas, fórmulas y ejemplos resueltos.
+  </p>
+  <div class="meta">
+    <span><strong>Modelo:</strong> OSI / TCP-IP</span>
+    <span><strong>Enfoque:</strong> examen</span>
+    <span><strong>Incluye:</strong> 15+ ejercicios resueltos</span>
+    <span><strong>Diagramas:</strong> SVG inline</span>
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<!-- TEMA 1 -->
+<!-- ============================================================ -->
+<section class="tema" id="tema1">
+  <div class="tema-header">
+    <div class="num">01</div>
+    <div>
+      <h2>Introducción y arquitectura de red</h2>
+      <p class="desc">El vocabulario y los modelos. Sin esta base, todo lo demás se confunde.</p>
+    </div>
+  </div>
+
+  <p>Una <strong>red de computadores</strong> es un sistema que permite intercambiar información entre equipos. Para entender cómo funciona necesitamos dos cosas: un vocabulario común (host, router, enlace, protocolo…) y un modelo en capas que descomponga el problema en piezas manejables.</p>
+
+  <h3 id="t1-conceptos">Terminología básica</h3>
+
+  <dl class="terms">
+    <dt>Nodo</dt><dd>Cualquier equipo conectado capaz de enviar y recibir información.</dd>
+    <dt>Host / estación</dt><dd>Nodo que hospeda aplicaciones (cliente, servidor o peer).</dd>
+    <dt>Router</dt><dd>Dispositivo de capa 3 que interconecta redes distintas reexpidiendo paquetes IP.</dd>
+    <dt>Switch</dt><dd>Dispositivo de capa 2 que reexpide tramas dentro de una LAN.</dd>
+    <dt>Hub</dt><dd>Dispositivo de capa 1: amplifica la señal pero no entiende tramas.</dd>
+    <dt>Enlace</dt><dd>Conexión física entre dos nodos. <em>Punto-a-punto</em> si es directa, <em>extremo-a-extremo</em> si es lógica entre estaciones (puede atravesar routers).</dd>
+    <dt>Protocolo</dt><dd>Conjunto de reglas que deben seguir las entidades de una capa para entenderse.</dd>
+    <dt>Pila de protocolos</dt><dd>Conjunto concreto de protocolos usados en una comunicación. Ej: <code>HTTP / TCP / IP / Ethernet</code>.</dd>
+  </dl>
+
+  <h3 id="t1-topologias">Topologías y tipos de redes</h3>
+
+  <p>Las redes se clasifican por <strong>extensión geográfica</strong> y por <strong>topología física</strong>.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Sigla</th><th>Nombre</th><th>Escala típica</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td><code>PAN</code></td><td>Personal Area Network</td><td>1–10 m</td><td>Bluetooth, USB</td></tr>
+        <tr><td><code>LAN</code></td><td>Local Area Network</td><td>edificio</td><td>Ethernet, Wi-Fi</td></tr>
+        <tr><td><code>MAN</code></td><td>Metropolitan Area Network</td><td>ciudad</td><td>red de un campus</td></tr>
+        <tr><td><code>WAN</code></td><td>Wide Area Network</td><td>país / continente</td><td>red de un ISP</td></tr>
+        <tr><td><code>Internet</code></td><td>red de redes</td><td>mundo</td><td>la propia Internet</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="diagram">
+    <svg id="diagram-1" viewBox="0 0 720 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Topologías de red: bus, estrella, anillo">
+      <style>
+        #diagram-1 .node { fill: #171717; stroke: #e5e5e5; stroke-width: 1.5; }
+        #diagram-1 .hub  { fill: #fb923c; stroke: #e5e5e5; stroke-width: 1.5; }
+        #diagram-1 .link { stroke: #e5e5e5; stroke-width: 1.5; fill: none; }
+        #diagram-1 .lbl  { font-family: 'Geist Mono', monospace; font-size: 11px; fill: #d4d4d8; text-anchor: middle; letter-spacing: 0.08em; text-transform: uppercase; }
+        #diagram-1 .ttl  { font-family: 'Geist', sans-serif; font-weight: 600; font-size: 14px; fill: #38bdf8; text-anchor: middle; }
+      </style>
+      <!-- BUS -->
+      <g transform="translate(20,30)">
+        <line class="link" x1="20" y1="80" x2="180" y2="80"/>
+        <line class="link" x1="50"  y1="50" x2="50"  y2="80"/>
+        <line class="link" x1="100" y1="50" x2="100" y2="80"/>
+        <line class="link" x1="150" y1="50" x2="150" y2="80"/>
+        <line class="link" x1="50"  y1="110" x2="50"  y2="80"/>
+        <line class="link" x1="100" y1="110" x2="100" y2="80"/>
+        <line class="link" x1="150" y1="110" x2="150" y2="80"/>
+        <circle class="node" cx="50"  cy="42" r="10"/>
+        <circle class="node" cx="100" cy="42" r="10"/>
+        <circle class="node" cx="150" cy="42" r="10"/>
+        <circle class="node" cx="50"  cy="118" r="10"/>
+        <circle class="node" cx="100" cy="118" r="10"/>
+        <circle class="node" cx="150" cy="118" r="10"/>
+        <text class="ttl" x="100" y="170">Bus</text>
+        <text class="lbl" x="100" y="190">canal compartido</text>
+      </g>
+      <!-- ESTRELLA -->
+      <g transform="translate(260,30)">
+        <line class="link" x1="100" y1="80" x2="30"  y2="30"/>
+        <line class="link" x1="100" y1="80" x2="170" y2="30"/>
+        <line class="link" x1="100" y1="80" x2="30"  y2="130"/>
+        <line class="link" x1="100" y1="80" x2="170" y2="130"/>
+        <line class="link" x1="100" y1="80" x2="100" y2="20"/>
+        <line class="link" x1="100" y1="80" x2="100" y2="140"/>
+        <circle class="node" cx="30"  cy="30" r="10"/>
+        <circle class="node" cx="170" cy="30" r="10"/>
+        <circle class="node" cx="30"  cy="130" r="10"/>
+        <circle class="node" cx="170" cy="130" r="10"/>
+        <circle class="node" cx="100" cy="20" r="10"/>
+        <circle class="node" cx="100" cy="140" r="10"/>
+        <rect class="hub" x="88" y="68" width="24" height="24" rx="3"/>
+        <text class="ttl" x="100" y="170">Estrella / árbol</text>
+        <text class="lbl" x="100" y="190">switch en el centro</text>
+      </g>
+      <!-- ANILLO -->
+      <g transform="translate(500,30)">
+        <circle cx="100" cy="80" r="55" stroke="#e5e5e5" stroke-width="1.5" fill="none"/>
+        <circle class="node" cx="100" cy="25" r="10"/>
+        <circle class="node" cx="155" cy="55" r="10"/>
+        <circle class="node" cx="155" cy="105" r="10"/>
+        <circle class="node" cx="100" cy="135" r="10"/>
+        <circle class="node" cx="45"  cy="105" r="10"/>
+        <circle class="node" cx="45"  cy="55" r="10"/>
+        <text class="ttl" x="100" y="170">Anillo</text>
+        <text class="lbl" x="100" y="190">token ring</text>
+      </g>
+    </svg>
+    <div class="caption">Las tres topologías clásicas. En realidad, casi todas las LAN modernas son estrellas conmutadas.</div>
+  </div>
+
+  <h4>Tipos de envío</h4>
+  <ul>
+    <li><strong>Unicast</strong>: uno a uno. La inmensa mayoría del tráfico.</li>
+    <li><strong>Multicast</strong>: uno a un grupo concreto suscrito. Ideal para streaming.</li>
+    <li><strong>Broadcast</strong>: uno a todos los nodos de la red. Necesario en ARP, DHCP.</li>
+    <li><strong>Anycast</strong>: uno al "más cercano" de un grupo (mismo destino, varias instancias).</li>
+  </ul>
+
+  <h3 id="t1-osi">El modelo OSI (7 capas)</h3>
+
+  <p>El modelo <strong>OSI</strong> (Open Systems Interconnection, ISO) divide la comunicación en 7 capas. Es un modelo de referencia: en la práctica nadie implementa OSI puro, pero el vocabulario se sigue usando.</p>
+
+  <div class="diagram">
+    <svg id="diagram-2" viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparativa modelos OSI y TCP/IP">
+      <style>
+        #diagram-2 .layer { stroke: #e5e5e5; stroke-width: 1.5; }
+        #diagram-2 .l-name { font-family: 'Geist', sans-serif; font-weight: 600; font-size: 14px; fill: #e5e5e5; }
+        #diagram-2 .l-num { font-family: 'Geist Mono', monospace; font-size: 10px; fill: #fb923c; font-weight: 700; letter-spacing: 0.1em; }
+        #diagram-2 .l-desc { font-family: 'Geist', sans-serif; font-size: 11px; fill: #d4d4d8; font-style: italic; }
+        #diagram-2 .title { font-family: 'Geist', sans-serif; font-weight: 700; font-size: 16px; text-anchor: middle; fill: #38bdf8; }
+        #diagram-2 .colA { fill: #4a2208; }
+        #diagram-2 .colB { fill: #0a3148; }
+        #diagram-2 .colC { fill: #3d2e05; }
+        #diagram-2 .colD { fill: #1c1c1c; }
+        #diagram-2 .arrow { stroke: #fb923c; stroke-width: 2; fill: none; marker-end: url(#ah); }
+      </style>
+      <defs>
+        <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" fill="#fb923c"/>
+        </marker>
+      </defs>
+      <text class="title" x="180" y="25">Modelo OSI</text>
+      <text class="title" x="520" y="25">Modelo TCP/IP</text>
+
+      <!-- OSI 7 layers -->
+      <g transform="translate(40,40)">
+        <rect class="layer colA" x="0" y="0"   width="280" height="36"/>
+        <text class="l-num"  x="10" y="14">L7</text>
+        <text class="l-name" x="10" y="28">Aplicación</text>
+        <text class="l-desc" x="180" y="22">HTTP, SMTP, DNS</text>
+
+        <rect class="layer colA" x="0" y="36"  width="280" height="36"/>
+        <text class="l-num"  x="10" y="50">L6</text>
+        <text class="l-name" x="10" y="64">Presentación</text>
+        <text class="l-desc" x="180" y="58">cifrado, formato</text>
+
+        <rect class="layer colA" x="0" y="72"  width="280" height="36"/>
+        <text class="l-num"  x="10" y="86">L5</text>
+        <text class="l-name" x="10" y="100">Sesión</text>
+        <text class="l-desc" x="180" y="94">diálogo</text>
+
+        <rect class="layer colB" x="0" y="108" width="280" height="42"/>
+        <text class="l-num"  x="10" y="122">L4</text>
+        <text class="l-name" x="10" y="138">Transporte</text>
+        <text class="l-desc" x="180" y="132">TCP, UDP</text>
+
+        <rect class="layer colC" x="0" y="150" width="280" height="42"/>
+        <text class="l-num"  x="10" y="164">L3</text>
+        <text class="l-name" x="10" y="180">Red</text>
+        <text class="l-desc" x="180" y="174">IP, ICMP, routers</text>
+
+        <rect class="layer colD" x="0" y="192" width="280" height="42"/>
+        <text class="l-num"  x="10" y="206">L2</text>
+        <text class="l-name" x="10" y="222">Enlace de datos</text>
+        <text class="l-desc" x="180" y="216">Ethernet, MAC</text>
+
+        <rect class="layer colD" x="0" y="234" width="280" height="42"/>
+        <text class="l-num"  x="10" y="248">L1</text>
+        <text class="l-name" x="10" y="264">Física</text>
+        <text class="l-desc" x="180" y="258">cables, señales</text>
+      </g>
+
+      <!-- TCP/IP 4 layers (alineadas) -->
+      <g transform="translate(400,40)">
+        <rect class="layer colA" x="0" y="0" width="280" height="108"/>
+        <text class="l-num"  x="10" y="14">L5</text>
+        <text class="l-name" x="10" y="32">Aplicación</text>
+        <text class="l-desc" x="180" y="58">incluye sesión y</text>
+        <text class="l-desc" x="180" y="72">presentación</text>
+
+        <rect class="layer colB" x="0" y="108" width="280" height="42"/>
+        <text class="l-num"  x="10" y="122">L4</text>
+        <text class="l-name" x="10" y="138">Transporte</text>
+        <text class="l-desc" x="180" y="132">TCP / UDP</text>
+
+        <rect class="layer colC" x="0" y="150" width="280" height="42"/>
+        <text class="l-num"  x="10" y="164">L3</text>
+        <text class="l-name" x="10" y="180">Internet</text>
+        <text class="l-desc" x="180" y="174">IP</text>
+
+        <rect class="layer colD" x="0" y="192" width="280" height="84"/>
+        <text class="l-num"  x="10" y="206">L1-L2</text>
+        <text class="l-name" x="10" y="228">Interfaz de red</text>
+        <text class="l-desc" x="180" y="246">cables + tramas</text>
+      </g>
+
+      <!-- Bottom annotation -->
+      <text class="l-desc" x="360" y="310" text-anchor="middle">El modelo TCP/IP fusiona varias capas OSI en pocas más prácticas.</text>
+      <text class="l-desc" x="360" y="328" text-anchor="middle">Lo que viaja por la red es siempre la misma información.</text>
+    </svg>
+    <div class="caption">OSI a la izquierda, TCP/IP a la derecha. Sesión y presentación apenas se usan en la práctica: HTTPS las cumple por su cuenta (TLS).</div>
+  </div>
+
+  <h4>Regla mnemotécnica</h4>
+  <p>De arriba abajo (L7 → L1): <strong>A</strong>plicación, <strong>P</strong>resentación, <strong>S</strong>esión, <strong>T</strong>ransporte, <strong>R</strong>ed, <strong>E</strong>nlace, <strong>F</strong>ísica. <em>"Almeja Para Sopa Tiene Rica Espina Fresca"</em>.</p>
+
+  <h3 id="t1-tcpip">El modelo TCP/IP</h3>
+
+  <p>TCP/IP es el modelo <strong>real</strong> de Internet. Tiene 4 capas en lugar de 7, y fue diseñado de abajo hacia arriba (a partir de lo que funcionaba). Las equivalencias se ven en el diagrama anterior.</p>
+
+  <div class="callout tip">
+    <span class="label">Idea clave</span>
+    <p>OSI es un modelo <em>conceptual</em> útil para hablar. TCP/IP es el modelo <em>operativo</em>: si despliegas algo en Internet, estás usando TCP/IP.</p>
+  </div>
+
+  <h3 id="t1-encapsulado">Encapsulado de protocolos</h3>
+
+  <p>Cuando un mensaje baja por la pila, cada capa <strong>añade su propia cabecera</strong> (y a veces cola) a los datos de la capa superior. En el extremo receptor el proceso es inverso: cada capa quita su cabecera y pasa lo de dentro a la superior.</p>
+
+  <div class="diagram">
+    <svg id="diagram-3" viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Encapsulado de protocolos">
+      <style>
+        #diagram-3 .box { stroke: #e5e5e5; stroke-width: 1.3; }
+        #diagram-3 .hdr { fill: #fb923c; }
+        #diagram-3 .pl  { fill: #171717; }
+        #diagram-3 .ftr { fill: #38bdf8; }
+        #diagram-3 .tx  { font-family: 'Geist Mono', monospace; font-size: 11px; fill: #e5e5e5; text-anchor: middle; font-weight: 500; }
+        #diagram-3 .txw { fill: #ededed; }
+        #diagram-3 .lyr { font-family: 'Geist', sans-serif; font-weight: 600; font-size: 13px; fill: #d4d4d8; }
+        #diagram-3 .pdu { font-family: 'Geist', sans-serif; font-style: italic; font-size: 11px; fill: #fb923c; }
+      </style>
+
+      <!-- Aplicación -->
+      <g transform="translate(40,30)">
+        <text class="lyr" x="0" y="14">Aplicación</text>
+        <rect class="box pl" x="120" y="0" width="240" height="22"/>
+        <text class="tx" x="240" y="15">DATOS HTTP</text>
+        <text class="pdu" x="570" y="15">mensaje</text>
+      </g>
+
+      <!-- Transporte -->
+      <g transform="translate(40,70)">
+        <text class="lyr" x="0" y="14">Transporte</text>
+        <rect class="box hdr" x="80" y="0" width="40" height="22"/>
+        <text class="tx txw" x="100" y="15">TCP</text>
+        <rect class="box pl" x="120" y="0" width="240" height="22"/>
+        <text class="tx" x="240" y="15">DATOS HTTP</text>
+        <text class="pdu" x="570" y="15">segmento</text>
+      </g>
+
+      <!-- Red -->
+      <g transform="translate(40,110)">
+        <text class="lyr" x="0" y="14">Red</text>
+        <rect class="box hdr" x="40" y="0" width="40" height="22"/>
+        <text class="tx txw" x="60" y="15">IP</text>
+        <rect class="box hdr" x="80" y="0" width="40" height="22"/>
+        <text class="tx txw" x="100" y="15">TCP</text>
+        <rect class="box pl" x="120" y="0" width="240" height="22"/>
+        <text class="tx" x="240" y="15">DATOS HTTP</text>
+        <text class="pdu" x="570" y="15">paquete</text>
+      </g>
+
+      <!-- Enlace -->
+      <g transform="translate(40,150)">
+        <text class="lyr" x="0" y="14">Enlace</text>
+        <rect class="box hdr" x="0" y="0" width="40" height="22"/>
+        <text class="tx txw" x="20" y="15">ETH</text>
+        <rect class="box hdr" x="40" y="0" width="40" height="22"/>
+        <text class="tx txw" x="60" y="15">IP</text>
+        <rect class="box hdr" x="80" y="0" width="40" height="22"/>
+        <text class="tx txw" x="100" y="15">TCP</text>
+        <rect class="box pl" x="120" y="0" width="240" height="22"/>
+        <text class="tx" x="240" y="15">DATOS HTTP</text>
+        <rect class="box ftr" x="360" y="0" width="40" height="22"/>
+        <text class="tx txw" x="380" y="15">CRC</text>
+        <text class="pdu" x="570" y="15">trama</text>
+      </g>
+
+      <!-- Física -->
+      <g transform="translate(40,190)">
+        <text class="lyr" x="0" y="14">Física</text>
+        <text class="tx" x="240" y="15" style="letter-spacing:4px">10110010 01001011 10101100…</text>
+        <text class="pdu" x="570" y="15">bits</text>
+      </g>
+
+      <!-- Flecha -->
+      <path d="M 600 35 L 600 200" stroke="#fb923c" stroke-width="2" fill="none" marker-end="url(#ah2)"/>
+      <defs>
+        <marker id="ah2" markerWidth="10" markerHeight="10" refX="5" refY="9" orient="auto">
+          <path d="M0,0 L5,9 L10,0 z" fill="#fb923c"/>
+        </marker>
+      </defs>
+      <text class="tx" x="630" y="120" transform="rotate(90 630 120)" fill="#fb923c" style="font-weight:700">EMISOR</text>
+    </svg>
+    <div class="caption">Cada capa añade su cabecera. En el destino, cada capa la quita en sentido inverso ("desencapsulado").</div>
+  </div>
+
+  <div class="callout">
+    <span class="label">Nombres de la PDU por capa</span>
+    <p><code>mensaje</code> (aplicación) → <code>segmento</code>/<code>datagrama</code> (transporte) → <code>paquete</code> (red) → <code>trama</code> (enlace) → <code>bits</code> (física).</p>
+  </div>
+
+  <h3 id="t1-dispositivos">Dispositivos de interconexión por capa</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Dispositivo</th><th>Capa</th><th>Qué entiende</th><th>Qué hace</th></tr></thead>
+      <tbody>
+        <tr><td>Hub / repetidor</td><td>L1 física</td><td>bits</td><td>Reenvía la señal a todos los puertos. Provoca colisiones.</td></tr>
+        <tr><td>Switch / puente</td><td>L2 enlace</td><td>tramas y direcciones MAC</td><td>Aprende qué MAC hay en cada puerto y solo reenvía donde toca.</td></tr>
+        <tr><td>Router / encaminador</td><td>L3 red</td><td>paquetes IP</td><td>Decide la mejor ruta entre redes distintas mirando la tabla de rutas.</td></tr>
+        <tr><td>Gateway de aplicación</td><td>L7</td><td>protocolos de aplicación</td><td>Traduce entre protocolos (ej: proxy HTTP).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warn">
+    <span class="label">Error típico</span>
+    <p>Confundir <strong>switch</strong> con <strong>router</strong>. Un switch trabaja en <em>una sola</em> red local: solo entiende MACs. Un router conecta <em>varias</em> redes distintas: entiende IPs.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TEMA 2 -->
+<!-- ============================================================ -->
+<section class="tema" id="tema2">
+  <div class="tema-header">
+    <div class="num">02</div>
+    <div>
+      <h2>Capa física</h2>
+      <p class="desc">De bits abstractos a voltios, fotones u ondas. Y, sobre todo, cuánto se puede meter por un canal.</p>
+    </div>
+  </div>
+
+  <p>La capa física se encarga de convertir bits en <strong>señales</strong> que viajen por un medio (cable, fibra, aire) y de recuperarlos al otro lado. Aquí se estudia qué señales pueden transmitirse, cómo de rápido y con qué calidad.</p>
+
+  <h3 id="t2-senales">Señales periódicas y Fourier</h3>
+
+  <p>Una señal sinusoidal pura se describe con:</p>
+
+  <div class="formula">
+<span class="var">s(t)</span> <span class="op">=</span> <span class="var">A</span> · sin(2π <span class="var">f</span> <span class="var">t</span> + <span class="var">φ</span>)
+<span class="com">// A: amplitud · f: frecuencia (Hz) · φ: fase</span>
+
+<span class="var">T</span> <span class="op">=</span> <span class="num">1</span> / <span class="var">f</span>    <span class="com">// periodo (s)</span>
+  </div>
+
+  <p>Cualquier señal periódica se puede descomponer en una suma de sinusoides (serie de <strong>Fourier</strong>). El conjunto de frecuencias que ocupa una señal es su <strong>ancho de banda</strong> <code>B</code>, medido en Hz. Cuanto más ancho de banda, más información se puede transmitir.</p>
+
+  <h3 id="t2-db">Decibelios, SNR y atenuación</h3>
+
+  <p>Las potencias en telecomunicaciones se manejan casi siempre en <strong>decibelios</strong>, porque cubren rangos enormes y porque las atenuaciones se suman en escala logarítmica.</p>
+
+  <div class="formula">
+<span class="var">dB</span>  <span class="op">=</span> <span class="num">10</span> · log<span class="num">10</span>(<span class="var">M₁</span> / <span class="var">M₂</span>)
+<span class="var">dBm</span> <span class="op">=</span> <span class="num">10</span> · log<span class="num">10</span>(<span class="var">P</span> / <span class="num">1mW</span>)
+<span class="var">SNR(dB)</span> <span class="op">=</span> <span class="num">10</span> · log<span class="num">10</span>(<span class="var">S</span> / <span class="var">N</span>)
+  </div>
+
+  <p>El balance de potencias en un enlace se plantea así:</p>
+
+  <div class="formula">
+<span class="var">Pt</span> − <span class="var">L</span> <span class="op">=</span> <span class="var">Pr</span>           <span class="com">// potencia recibida = transmitida − atenuación</span>
+<span class="var">Pr</span> − <span class="var">Sr</span> <span class="op">=</span> <span class="var">M</span> ≥ <span class="num">0</span>    <span class="com">// margen de enlace ≥ 0 → enlace viable</span>
+  </div>
+
+  <dl class="terms">
+    <dt>Pt</dt><dd>Potencia transmitida.</dd>
+    <dt>L</dt><dd>Atenuación (loss) acumulada del medio.</dd>
+    <dt>Pr</dt><dd>Potencia recibida.</dd>
+    <dt>Sr</dt><dd>Sensibilidad mínima del receptor.</dd>
+    <dt>M</dt><dd>Margen: cuánto sobra. Si es negativo, el receptor no detecta nada.</dd>
+  </dl>
+
+  <h3 id="t2-medios">Medios de transmisión</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Medio</th><th>Ventajas</th><th>Inconvenientes</th><th>Vp típica</th></tr></thead>
+      <tbody>
+        <tr><td>Par trenzado (UTP/STP)</td><td>barato, fácil</td><td>distancia limitada, interferencias</td><td>~1.9·10⁸ m/s</td></tr>
+        <tr><td>Coaxial</td><td>buen blindaje</td><td>rígido, anticuado</td><td>~2·10⁸ m/s</td></tr>
+        <tr><td>Fibra óptica</td><td>enormes anchos de banda, inmune a EM</td><td>caro, frágil de instalar</td><td>~2·10⁸ m/s</td></tr>
+        <tr><td>Radiofrecuencia</td><td>movilidad</td><td>compartido, interferencias, seguridad</td><td>3·10⁸ m/s</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="t2-simbolos">Símbolos, baudios y bits</h3>
+
+  <p>Por el canal viajan <strong>símbolos</strong> (formas de onda distinguibles), no bits directamente. Cada símbolo lleva varios bits según cuántos símbolos distintos tenga el alfabeto.</p>
+
+  <div class="formula">
+<span class="var">k</span>  <span class="op">=</span> log<span class="num">2</span>(<span class="var">M</span>)            <span class="com">// bits por símbolo</span>
+<span class="var">Rs</span> <span class="op">=</span> <span class="num">1</span> / <span class="var">Ts</span>             <span class="com">// símbolos/s = baudios (Bd)</span>
+<span class="var">Rb</span> <span class="op">=</span> <span class="var">Rs</span> · log<span class="num">2</span>(<span class="var">M</span>)     <span class="com">// bits/s</span>
+  </div>
+
+  <div class="callout warn">
+    <span class="label">Error típico</span>
+    <p>Confundir <strong>baudios</strong> (símbolos/s) con <strong>bits/s</strong>. Solo coinciden si <code>M = 2</code> (binario, 1 bit/símbolo). Con QAM-16 son <em>cuatro veces más</em> bits que baudios.</p>
+  </div>
+
+  <h3 id="t2-codificaciones">Codificaciones de línea</h3>
+
+  <p>Una <strong>codificación de línea</strong> define cómo se representa cada bit con voltajes (o intensidad de luz) a lo largo del tiempo. Cada esquema busca un equilibrio entre simplicidad, sincronismo y eficiencia espectral.</p>
+
+  <div class="diagram">
+    <svg id="diagram-4" viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Codificaciones de línea NRZ-L, NRZ-M, Manchester">
+      <style>
+        #diagram-4 .ax { stroke: #404040; stroke-width: 0.8; }
+        #diagram-4 .sg { stroke: #e5e5e5; stroke-width: 2; fill: none; }
+        #diagram-4 .bb { font-family: 'Geist Mono', monospace; font-size: 12px; fill: #e5e5e5; font-weight: 700; text-anchor: middle; }
+        #diagram-4 .lb { font-family: 'Geist', sans-serif; font-size: 13px; font-weight: 600; fill: #38bdf8; }
+        #diagram-4 .lt { stroke: #262626; stroke-width: 0.6; stroke-dasharray: 2 3; }
+      </style>
+      <!-- Bits -->
+      <text class="bb" x="80"  y="20">1</text>
+      <text class="bb" x="140" y="20">0</text>
+      <text class="bb" x="200" y="20">1</text>
+      <text class="bb" x="260" y="20">1</text>
+      <text class="bb" x="320" y="20">0</text>
+      <text class="bb" x="380" y="20">0</text>
+      <text class="bb" x="440" y="20">1</text>
+      <text class="bb" x="500" y="20">0</text>
+
+      <!-- vertical guides -->
+      <g>
+        <line class="lt" x1="50" y1="30" x2="50" y2="240"/>
+        <line class="lt" x1="110" y1="30" x2="110" y2="240"/>
+        <line class="lt" x1="170" y1="30" x2="170" y2="240"/>
+        <line class="lt" x1="230" y1="30" x2="230" y2="240"/>
+        <line class="lt" x1="290" y1="30" x2="290" y2="240"/>
+        <line class="lt" x1="350" y1="30" x2="350" y2="240"/>
+        <line class="lt" x1="410" y1="30" x2="410" y2="240"/>
+        <line class="lt" x1="470" y1="30" x2="470" y2="240"/>
+        <line class="lt" x1="530" y1="30" x2="530" y2="240"/>
+      </g>
+
+      <!-- NRZ-L -->
+      <text class="lb" x="540" y="60">NRZ-L</text>
+      <line class="ax" x1="50" y1="65" x2="530" y2="65"/>
+      <path class="sg" d="M50,50 L110,50 L110,80 L170,80 L170,50 L230,50 L230,50 L290,50 L290,80 L350,80 L350,80 L410,80 L410,50 L470,50 L470,80 L530,80"/>
+
+      <!-- NRZ-M (cambia en 1) -->
+      <text class="lb" x="540" y="125">NRZ-M</text>
+      <line class="ax" x1="50" y1="130" x2="530" y2="130"/>
+      <path class="sg" d="M50,115 L110,115 L110,145 L170,145 L170,115 L230,115 L230,145 L290,145 L290,145 L350,145 L350,145 L410,145 L410,115 L470,115 L470,115 L530,115"/>
+
+      <!-- Manchester (transición en medio: 1=alto->bajo, 0=bajo->alto) -->
+      <text class="lb" x="540" y="195">Manchester</text>
+      <line class="ax" x1="50" y1="200" x2="530" y2="200"/>
+      <!-- 1: down  0: up -->
+      <path class="sg" d="
+        M50,185 L80,185 L80,215 L110,215
+        L110,215 L140,215 L140,185 L170,185
+        L170,185 L200,185 L200,215 L230,215
+        L230,185 L260,185 L260,215 L290,215
+        L290,215 L320,215 L320,185 L350,185
+        L350,215 L380,215 L380,185 L410,185
+        L410,185 L440,185 L440,215 L470,215
+        L470,215 L500,215 L500,185 L530,185"/>
+
+      <text class="bb" x="290" y="255" style="font-size:11px; font-weight:400; fill:#a1a1aa; font-style:italic; font-family:'Geist',sans-serif">Manchester garantiza una transición por bit → sincronismo gratis.</text>
+    </svg>
+    <div class="caption">Tres codificaciones para la misma secuencia <code>10110010</code>.</div>
+  </div>
+
+  <ul>
+    <li><strong>NRZ-L</strong>: nivel alto = 1, nivel bajo = 0. Sencillo pero sin transiciones si hay muchos 0 o 1 seguidos.</li>
+    <li><strong>NRZ-M</strong>: cambia de nivel cada vez que aparece un 1 (mantiene si aparece un 0). Diferencial.</li>
+    <li><strong>NRZ-AMI</strong>: alterna polaridad en cada 1, los 0 son nivel cero.</li>
+    <li><strong>Manchester</strong>: transición en el centro de cada bit. Sincronismo perfecto, pero el doble de ancho de banda.</li>
+    <li><strong>4B5B</strong>: agrupa 4 bits en 5 antes de codificar (Fast Ethernet). Evita largas secuencias sin transición.</li>
+  </ul>
+
+  <h3 id="t2-nyquist">Nyquist y Shannon</h3>
+
+  <p>Dos teoremas marcan el techo de lo que se puede transmitir por un canal.</p>
+
+  <div class="grid-2">
+    <div>
+      <h4>Nyquist (canal sin ruido)</h4>
+      <div class="formula">
+<span class="var">Rs</span> ≤ <span class="num">2</span> · <span class="var">B</span>
+<span class="var">Rb</span> ≤ <span class="num">2</span> · <span class="var">B</span> · log<span class="num">2</span>(<span class="var">M</span>)
+      </div>
+      <p>Limita los <strong>símbolos por segundo</strong> en función del ancho de banda. Suponiendo no hay ruido, podríamos meter cualquier número de bits aumentando <code>M</code>.</p>
+    </div>
+    <div>
+      <h4>Shannon-Hartley (con ruido)</h4>
+      <div class="formula">
+<span class="var">C</span> <span class="op">=</span> <span class="var">B</span> · log<span class="num">2</span>(<span class="num">1</span> + <span class="var">S</span>/<span class="var">N</span>)
+<span class="var">Rb</span> ≤ <span class="var">C</span>
+      </div>
+      <p>Limita los <strong>bits/s reales</strong> en función del ancho de banda <strong>y</strong> la relación señal/ruido. Ya no se puede subir <code>M</code> indefinidamente porque el ruido te confunde símbolos.</p>
+    </div>
+  </div>
+
+  <div class="callout example">
+    <span class="label">Ejercicio resuelto · Shannon</span>
+    <p>Canal con <code>B = 1 MHz</code> y <code>S/N = 15</code>. ¿Capacidad máxima?</p>
+    <pre data-label="solución">C = B · log₂(1 + S/N)
+C = 10⁶ · log₂(1 + 15)
+C = 10⁶ · log₂(16)
+C = 10⁶ · 4 = <strong>4 Mb/s</strong></pre>
+  </div>
+
+  <div class="callout example">
+    <span class="label">Ejercicio resuelto · símbolos a bits</span>
+    <p>Señal con <code>M = 16</code> símbolos y <code>Ts = 2 µs</code>. Calcula <code>Rs</code>, <code>k</code> y <code>Rb</code>.</p>
+    <pre data-label="solución">k  = log₂(16) = 4 bits/símbolo
+Rs = 1 / 2µs  = 500 000 Bd
+Rb = Rs · k   = 500 000 · 4 = <strong>2 Mb/s</strong></pre>
+  </div>
+
+  <h3 id="t2-modos">Modos de transmisión</h3>
+
+  <ul>
+    <li><strong>Simplex</strong>: un solo sentido (TV, radio).</li>
+    <li><strong>Half-duplex</strong>: dos sentidos pero no simultáneos (walkie-talkie).</li>
+    <li><strong>Full-duplex</strong>: dos sentidos a la vez (Ethernet conmutada, teléfono).</li>
+    <li><strong>Serie vs paralelo</strong>: serie envía bit a bit por un solo canal; paralelo envía varios bits a la vez. Serie gana en distancias largas.</li>
+    <li><strong>Asíncrona vs síncrona</strong>: asíncrona usa bits de start/stop por carácter; síncrona transmite tramas con sincronismo de reloj continuo.</li>
+  </ul>
+
+  <h4>Variantes Ethernet físicas comunes</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Estándar</th><th>Velocidad</th><th>Medio</th><th>Distancia</th></tr></thead>
+      <tbody>
+        <tr><td>10BASE-T</td><td>10 Mb/s</td><td>UTP cat. 3+</td><td>100 m</td></tr>
+        <tr><td>100BASE-TX</td><td>100 Mb/s</td><td>UTP cat. 5+</td><td>100 m</td></tr>
+        <tr><td>1000BASE-T</td><td>1 Gb/s</td><td>UTP cat. 5e+</td><td>100 m</td></tr>
+        <tr><td>10GBASE-SR</td><td>10 Gb/s</td><td>fibra multimodo</td><td>~300 m</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TEMA 3 -->
+<!-- ============================================================ -->
+<section class="tema" id="tema3">
+  <div class="tema-header">
+    <div class="num">03</div>
+    <div>
+      <h2>Capa de enlace de datos</h2>
+      <p class="desc">Organiza los bits en tramas, decide quién transmite y detecta los errores. Ethernet vive aquí.</p>
+    </div>
+  </div>
+
+  <h3 id="t3-tramas">Tramas y métricas de enlace</h3>
+
+  <p>La capa de enlace agrupa bits en <strong>tramas</strong>. Cada trama lleva direcciones <strong>MAC</strong> (de origen y destino), datos, y un mecanismo de detección de errores (CRC en Ethernet).</p>
+
+  <div class="formula">
+<span class="var">Tt</span> <span class="op">=</span> <span class="var">L</span> / <span class="var">Vt</span>     <span class="com">// tiempo de transmisión (s)</span>
+<span class="var">Tp</span> <span class="op">=</span> <span class="var">D</span> / <span class="var">Vp</span>     <span class="com">// tiempo de propagación (s)</span>
+<span class="var">RTT</span> ≈ <span class="num">2</span> · <span class="var">Tp</span>    <span class="com">// round-trip time aproximado</span>
+  </div>
+
+  <dl class="terms">
+    <dt>L</dt><dd>Longitud de la trama en <em>bits</em> (¡cuidado, no bytes!).</dd>
+    <dt>Vt</dt><dd>Velocidad de transmisión del enlace en b/s.</dd>
+    <dt>D</dt><dd>Distancia entre extremos en metros.</dd>
+    <dt>Vp</dt><dd>Velocidad de propagación en el medio.</dd>
+  </dl>
+
+  <div class="callout example">
+    <span class="label">Ejercicio resuelto · tiempos</span>
+    <p>Trama de <code>L = 1500 B</code>, enlace de <code>100 Mb/s</code>, distancia <code>100 m</code>, <code>Vp = 2·10⁸ m/s</code>.</p>
+    <pre data-label="solución">L  = 1500 · 8 = 12 000 bits
+Tt = 12 000 / 10⁸ = 120 µs
+Tp = 100 / (2·10⁸) = 0,5 µs
+
+En LAN domina Tt. En enlace de larga distancia (satélite) dominaría Tp.</pre>
+  </div>
+
+  <h3 id="t3-conmutacion">Conmutación de circuitos vs paquetes</h3>
+
+  <div class="grid-2">
+    <div class="callout">
+      <span class="label">Conmutación de circuitos</span>
+      <p>Se reserva un canal de extremo a extremo antes de transmitir (teléfono clásico). Garantiza ancho de banda pero <strong>desperdicia</strong> recursos cuando no hay tráfico.</p>
+    </div>
+    <div class="callout">
+      <span class="label">Conmutación de paquetes</span>
+      <p>Cada paquete viaja por separado y comparte enlaces con otros. Mucho más eficiente, pero introduce <strong>retardo variable</strong> y posibles pérdidas en colas. Es lo que usa Internet.</p>
+    </div>
+  </div>
+
+  <h3 id="t3-mac">Control de acceso al medio (MAC)</h3>
+
+  <p>Cuando varios nodos comparten un canal hay que decidir <strong>quién transmite</strong> en cada momento.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Familia</th><th>Método</th><th>Idea</th><th>Dónde se usa</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3">División fija</td><td>TDMA</td><td>cada nodo en su turno temporal</td><td>móviles 2G/4G</td></tr>
+        <tr><td>FDMA</td><td>cada nodo en su banda</td><td>radio/TV</td></tr>
+        <tr><td>CDMA</td><td>cada nodo con su código</td><td>3G</td></tr>
+        <tr><td rowspan="3">Contención</td><td>Aloha</td><td>transmitir cuando quieras y retransmitir si choca</td><td>histórico</td></tr>
+        <tr><td>CSMA/CD</td><td>escuchar antes, detectar colisión</td><td>Ethernet con hub</td></tr>
+        <tr><td>CSMA/CA</td><td>escuchar antes, esperar ACK</td><td>Wi-Fi</td></tr>
+        <tr><td>Token passing</td><td>Token Ring</td><td>solo transmite el que tiene el testigo</td><td>histórico</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>CSMA/CD (Carrier Sense Multiple Access / Collision Detection)</h4>
+
+  <ol>
+    <li>Escuchar el canal hasta que esté libre.</li>
+    <li>Transmitir mientras se sigue escuchando.</li>
+    <li>Si se detecta colisión: enviar <code>jam</code>, esperar <em>backoff exponencial</em> y volver a 1.</li>
+  </ol>
+
+  <p>Para que el emisor pueda detectar una colisión, debe seguir transmitiendo el tiempo que tarda la colisión en volver desde el otro extremo. De ahí la <strong>trama mínima</strong>:</p>
+
+  <div class="formula">
+<span class="var">Tt</span> ≥ <span class="num">2</span> · <span class="var">Tp</span>
+<span class="var">Lmin</span> <span class="op">=</span> <span class="num">2</span> · <span class="var">Tp</span> · <span class="var">Vt</span>
+  </div>
+
+  <h4>CSMA/CA (Collision Avoidance, Wi-Fi)</h4>
+
+  <ol>
+    <li>Escuchar el canal hasta que esté libre durante un tiempo mínimo.</li>
+    <li>Transmitir.</li>
+    <li>Esperar ACK del receptor.</li>
+    <li>Si no llega ACK: backoff aleatorio y reintentar.</li>
+  </ol>
+
+  <div class="callout warn">
+    <span class="label">Error típico</span>
+    <p>Pensar que Wi-Fi usa CSMA/CD. No puede: en radio el emisor <em>no oye</em> mientras transmite (el problema del "terminal oculto"). Por eso Wi-Fi usa CA con ACK explícito.</p>
+  </div>
+
+  <h3 id="t3-ethernet">Ethernet</h3>
+
+  <p>La trama <strong>Ethernet II</strong> es uno de los formatos más usados del mundo. Se ha mantenido casi sin cambios desde los años 80.</p>
+
+  <div class="diagram">
+    <svg id="diagram-5" viewBox="0 0 720 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Trama Ethernet II">
+      <style>
+        #diagram-5 .b { stroke: #e5e5e5; stroke-width: 1.4; }
+        #diagram-5 .b1 { fill: #1c1c1c; }
+        #diagram-5 .b2 { fill: #4a2208; }
+        #diagram-5 .b3 { fill: #171717; }
+        #diagram-5 .b4 { fill: #0a3148; }
+        #diagram-5 .nm { font-family: 'Geist', sans-serif; font-weight: 600; font-size: 12px; fill: #e5e5e5; text-anchor: middle; }
+        #diagram-5 .sz { font-family: 'Geist Mono', monospace; font-size: 11px; fill: #fb923c; text-anchor: middle; font-weight: 700; }
+        #diagram-5 .ds { font-family: 'Geist', sans-serif; font-size: 11px; fill: #d4d4d8; font-style: italic; text-anchor: middle; }
+      </style>
+
+      <rect class="b b1" x="20"  y="30" width="70"  height="60"/>
+      <rect class="b b1" x="90"  y="30" width="30"  height="60"/>
+      <rect class="b b2" x="120" y="30" width="80"  height="60"/>
+      <rect class="b b2" x="200" y="30" width="80"  height="60"/>
+      <rect class="b b3" x="280" y="30" width="60"  height="60"/>
+      <rect class="b b3" x="340" y="30" width="290" height="60"/>
+      <rect class="b b4" x="630" y="30" width="70"  height="60"/>
+
+      <text class="nm" x="55"  y="55">Preámbulo</text>
+      <text class="sz" x="55"  y="72">7 B</text>
+      <text class="nm" x="105" y="55">SFD</text>
+      <text class="sz" x="105" y="72">1 B</text>
+      <text class="nm" x="160" y="55">MAC dest.</text>
+      <text class="sz" x="160" y="72">6 B</text>
+      <text class="nm" x="240" y="55">MAC orig.</text>
+      <text class="sz" x="240" y="72">6 B</text>
+      <text class="nm" x="310" y="55">Tipo</text>
+      <text class="sz" x="310" y="72">2 B</text>
+      <text class="nm" x="485" y="55">Datos (payload)</text>
+      <text class="sz" x="485" y="72">46–1500 B</text>
+      <text class="nm" x="665" y="55">CRC</text>
+      <text class="sz" x="665" y="72">4 B</text>
+
+      <text class="ds" x="55"  y="115">sincronismo</text>
+      <text class="ds" x="160" y="115">a quién</text>
+      <text class="ds" x="240" y="115">quién soy</text>
+      <text class="ds" x="310" y="115">IPv4=0x0800</text>
+      <text class="ds" x="485" y="115">la trama IP</text>
+      <text class="ds" x="665" y="115">comprueba</text>
+
+      <text class="ds" x="360" y="155" style="font-size:11px">MTU típica del payload: 1500 B. La trama completa ≈ 1518 B (sin contar preámbulo).</text>
+    </svg>
+    <div class="caption">Estructura de la trama Ethernet II.</div>
+  </div>
+
+  <h4>Direcciones MAC</h4>
+  <p>Son 48 bits, 6 octetos en hex, separados por <code>:</code>. Ejemplo: <code>00:1A:2B:3C:4D:5E</code>. Los 3 primeros octetos identifican al fabricante (<em>OUI</em>). La dirección <code>FF:FF:FF:FF:FF:FF</code> es broadcast Ethernet.</p>
+
+  <h4>Switch aprendiz</h4>
+  <p>Cuando le llega una trama por un puerto, <strong>aprende</strong> que la MAC origen está en ese puerto. Si la MAC destino la conoce, reenvía solo por su puerto; si no, hace <em>flooding</em>.</p>
+
+  <h4>VLANs y Spanning Tree</h4>
+  <ul>
+    <li><strong>VLAN</strong>: redes virtuales sobre la misma infraestructura física (etiqueta 802.1Q). Separa tráficos sin tener que añadir hardware.</li>
+    <li><strong>STP / RSTP</strong>: evita bucles en topologías con redundancia, podando enlaces hasta dejar un árbol.</li>
+    <li><strong>TSN</strong>: extensiones para tráfico en tiempo real con latencia garantizada.</li>
+  </ul>
+
+  <h3 id="t3-errores">Detección y corrección de errores</h3>
+
+  <p>Por el canal aparecen errores. La capa de enlace los <strong>detecta</strong> (y a veces los corrige) mediante bits de redundancia.</p>
+
+  <h4>Paridad</h4>
+  <p>Añade 1 bit a cada bloque de <code>m</code> bits de modo que el número total de 1s sea par (o impar). Detecta cualquier número <em>impar</em> de errores. No detecta errores pares.</p>
+
+  <h4>Checksum</h4>
+  <p>Suma bloques de <code>m</code> bits y envía el resultado. TCP/IP usa suma de enteros de 16 bits en complemento a 1.</p>
+
+  <h4>CRC (Cyclic Redundancy Check)</h4>
+  <p>Es el método estrella en enlace. Trata el mensaje como un polinomio y divide entre un <strong>polinomio generador</strong> <code>G</code> usando aritmética módulo 2 (XOR).</p>
+
+  <div class="formula">
+<span class="var">CRC</span> <span class="op">=</span> (<span class="var">M</span> · <span class="num">2^n</span>) <span class="op">mod</span> <span class="var">G</span>
+<span class="var">M'</span>  <span class="op">=</span> <span class="var">M</span> · <span class="num">2^n</span> + <span class="var">CRC</span>
+<span class="com">// Receptor: acepta si M' mod G = 0</span>
+  </div>
+
+  <div class="callout warn">
+    <span class="label">Error típico</span>
+    <p>Hacer la resta como en aritmética normal. En CRC, suma y resta son XOR. No hay acarreo.</p>
+  </div>
+
+  <h4>Distancia de Hamming</h4>
+  <p>Si la distancia mínima entre palabras válidas del código es <code>d</code>:</p>
+  <div class="formula">
+<span class="com">// errores que se pueden corregir</span>
+<span class="var">bits_corregibles</span> <span class="op">=</span> ⌊(<span class="var">d</span> − <span class="num">1</span>) / <span class="num">2</span>⌋
+  </div>
+
+  <h3 id="t3-arq">ARQ y ventana deslizante</h3>
+
+  <p>Los protocolos <strong>ARQ</strong> (Automatic Repeat reQuest) consiguen una transmisión fiable usando ACKs y retransmisiones.</p>
+
+  <h4>Stop &amp; Wait</h4>
+  <p>Solo hay una trama "en vuelo". Se envía una, se espera ACK, y solo entonces se envía la siguiente. Sencillo pero ineficiente con RTT grande.</p>
+
+  <div class="formula">
+<span class="var">U</span> <span class="op">=</span> <span class="num">100</span> · <span class="var">Tenvío</span> / <span class="var">RTT</span>     <span class="com">// utilización en %</span>
+  </div>
+
+  <h4>Ventana deslizante</h4>
+  <p>Permite <code>w</code> tramas sin confirmar a la vez. La ventana <em>avanza</em> a medida que llegan ACKs.</p>
+
+  <div class="diagram">
+    <svg id="diagram-6" viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Go-back-N vs Selective Repeat">
+      <style>
+        #diagram-6 .frm { stroke: #e5e5e5; stroke-width: 1; }
+        #diagram-6 .ok  { fill: #0a3148; }
+        #diagram-6 .bad { fill: #4a2208; }
+        #diagram-6 .gone{ fill: #262626; }
+        #diagram-6 .lbl { font-family: 'Geist', sans-serif; font-size: 13px; font-weight: 600; fill: #38bdf8; }
+        #diagram-6 .nm  { font-family: 'Geist Mono', monospace; font-size: 11px; fill: #e5e5e5; text-anchor: middle; font-weight: 700; }
+        #diagram-6 .ds  { font-family: 'Geist', sans-serif; font-size: 11px; fill: #d4d4d8; font-style: italic; }
+      </style>
+
+      <text class="lbl" x="20" y="25">Go-back-N (wr = 1)</text>
+      <g transform="translate(20,35)">
+        <rect class="frm gone" x="0"   y="0" width="40" height="32"/><text class="nm" x="20" y="20">0 ✓</text>
+        <rect class="frm gone" x="40"  y="0" width="40" height="32"/><text class="nm" x="60" y="20">1 ✓</text>
+        <rect class="frm bad"  x="80"  y="0" width="40" height="32"/><text class="nm" x="100" y="20">2 ✗</text>
+        <rect class="frm bad"  x="120" y="0" width="40" height="32"/><text class="nm" x="140" y="20">3</text>
+        <rect class="frm bad"  x="160" y="0" width="40" height="32"/><text class="nm" x="180" y="20">4</text>
+        <rect class="frm bad"  x="200" y="0" width="40" height="32"/><text class="nm" x="220" y="20">5</text>
+        <text class="ds" x="0" y="55">Si se pierde la 2, se descartan 3,4,5 y se reenvía TODO desde la 2.</text>
+      </g>
+
+      <text class="lbl" x="20" y="110">Selective Repeat (wr &gt; 1)</text>
+      <g transform="translate(20,120)">
+        <rect class="frm gone" x="0"   y="0" width="40" height="32"/><text class="nm" x="20" y="20">0 ✓</text>
+        <rect class="frm gone" x="40"  y="0" width="40" height="32"/><text class="nm" x="60" y="20">1 ✓</text>
+        <rect class="frm bad"  x="80"  y="0" width="40" height="32"/><text class="nm" x="100" y="20">2 ✗</text>
+        <rect class="frm ok"   x="120" y="0" width="40" height="32"/><text class="nm" x="140" y="20">3 ✓</text>
+        <rect class="frm ok"   x="160" y="0" width="40" height="32"/><text class="nm" x="180" y="20">4 ✓</text>
+        <rect class="frm ok"   x="200" y="0" width="40" height="32"/><text class="nm" x="220" y="20">5 ✓</text>
+        <text class="ds" x="0" y="55">Solo se retransmite la 2. El receptor guarda las demás en buffer.</text>
+      </g>
+    </svg>
+    <div class="caption">Las dos variantes principales de ventana deslizante.</div>
+  </div>
+
+  <div class="formula">
+<span class="com">// utilización con ventana</span>
+<span class="var">U</span> <span class="op">=</span> <span class="num">100</span> %                       <span class="op">si</span>  <span class="var">w</span> · <span class="var">Tenvío</span> ≥ <span class="var">RTT</span>
+<span class="var">U</span> <span class="op">=</span> <span class="num">100</span> · <span class="var">w</span> · <span class="var">Tenvío</span> / <span class="var">RTT</span>   <span class="op">si</span>  <span class="var">w</span> · <span class="var">Tenvío</span> &lt; <span class="var">RTT</span>
+
+<span class="com">// nº de secuencia necesarios</span>
+<span class="var">NS</span> ≥ <span class="var">w</span> + <span class="var">wr</span>
+<span class="var">bits_seq</span> <span class="op">=</span> ⌈log<span class="num">2</span>(<span class="var">NS</span>)⌉
+  </div>
+
+  <div class="callout example">
+    <span class="label">Ejercicio resuelto · ventana</span>
+    <p><code>Tenvío = 1 ms</code>, <code>RTT = 20 ms</code>, <code>w = 10</code>. ¿Utilización?</p>
+    <pre data-label="solución">w · Tenvío = 10 · 1 = 10 ms < RTT = 20 ms
+→ U = 100 · 10 / 20 = <strong>50 %</strong>
+
+Para llegar al 100 % necesitaría w ≥ RTT / Tenvío = 20.</pre>
+  </div>
+
+  <div class="callout example">
+    <span class="label">Ejercicio resuelto · números de secuencia</span>
+    <p>Ventana emisión <code>w = 5</code>, ventana recepción <code>wr = 4</code>. ¿Cuántos bits para los números de secuencia?</p>
+    <pre data-label="solución">NS ≥ w + wr = 5 + 4 = 9
+bits_seq = ⌈log₂(9)⌉ = <strong>4 bits</strong>   (16 valores: sobra)</pre>
+  </div>
+
+  <div class="callout example">
+    <span class="label">Ejercicio resuelto · CRC paso a paso</span>
+    <p>Mensaje <code>M = 1101011011</code>, generador <code>G = 10011</code> (grado n = 4). Calcular el CRC.</p>
+    <pre data-label="solución">1) Añadir n=4 ceros a M:   11010110110000
+2) Dividir entre G usando XOR:
+
+   11010110110000  ÷  10011
+   10011
+   -----
+   10011 1
+   10011
+   -----
+   00000 0110000   → bajamos bits y seguimos…
+                  → finalmente queda resto = 1110
+
+CRC = 1110
+Trama enviada: M + CRC = 11010110110000 + 1110 = 11010110111110
+
+El receptor divide 11010110111110 ÷ 10011. Si resto = 0, trama OK.</pre>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TEMA 4 -->
+<!-- ============================================================ -->
+<section class="tema" id="tema4">
+  <div class="tema-header">
+    <div class="num">04</div>
+    <div>
+      <h2>Capa de red</h2>
+      <p class="desc">Conectar redes distintas. IP, routers, direcciones jerárquicas y rutas que cruzan continentes.</p>
+    </div>
+  </div>
+
+  <h3 id="t4-intro">Por qué hace falta la capa 3</h3>
+
+  <p>La capa 2 sirve perfectamente para una LAN: hay pocas decenas o cientos de nodos, todos se conocen por su MAC, los switches aprenden por sí solos. Pero <strong>no escala</strong>:</p>
+
+  <ul>
+    <li>Las MAC no son jerárquicas: no se pueden agregar rutas.</li>
+    <li>Broadcasts ARP saturarían la red mundial.</li>
+    <li>No hay forma de ir de una LAN Ethernet a una red Wi-Fi o a un enlace de fibra.</li>
+  </ul>
+
+  <p>La capa de red <strong>interconecta redes</strong> mediante un sistema de direccionamiento <em>lógico</em> y jerárquico (IP), y unos dispositivos que toman decisiones de reexpedición (routers).</p>
+
+  <div class="callout tip">
+    <span class="label">Filosofía de IP</span>
+    <p>IP es <strong>best effort</strong>: hace lo que puede, no garantiza nada. Los paquetes pueden perderse, duplicarse, llegar desordenados o corromperse. La fiabilidad se delega a TCP (capa de transporte).</p>
+  </div>
+
+  <h3 id="t4-ipv4">IPv4 y cabecera</h3>
+
+  <p>Una dirección IPv4 son <strong>32 bits</strong>, escritos como cuatro octetos decimales separados por puntos: <code>155.210.153.238</code>.</p>
+
+  <div class="diagram">
+    <svg id="diagram-7" viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cabecera IPv4">
+      <style>
+        #diagram-7 .cell { stroke: #e5e5e5; stroke-width: 1; fill: #171717; }
+        #diagram-7 .key  { fill: #4a2208; }
+        #diagram-7 .tx   { font-family: 'Geist Mono', monospace; font-size: 10.5px; fill: #e5e5e5; text-anchor: middle; font-weight: 600; }
+        #diagram-7 .bn   { font-family: 'Geist Mono', monospace; font-size: 9px; fill: #fb923c; text-anchor: middle; font-weight: 700; letter-spacing: 0.05em; }
+        #diagram-7 .rl   { font-family: 'Geist Mono', monospace; font-size: 9px; fill: #a1a1aa; text-anchor: middle; }
+      </style>
+      <!-- bit ruler -->
+      <text class="rl" x="65"  y="20">0</text>
+      <text class="rl" x="170" y="20">8</text>
+      <text class="rl" x="305" y="20">16</text>
+      <text class="rl" x="440" y="20">24</text>
+      <text class="rl" x="570" y="20">31</text>
+
+      <!-- row 1 -->
+      <rect class="cell" x="30"  y="30" width="60"  height="30"/>
+      <rect class="cell" x="90"  y="30" width="60"  height="30"/>
+      <rect class="cell" x="150" y="30" width="120" height="30"/>
+      <rect class="cell" x="270" y="30" width="280" height="30"/>
+      <text class="tx" x="60"  y="49">Vers</text>
+      <text class="tx" x="120" y="49">IHL</text>
+      <text class="tx" x="210" y="49">ToS / DSCP</text>
+      <text class="tx" x="410" y="49">Total Length</text>
+      <text class="bn" x="60"  y="71">4b</text>
+      <text class="bn" x="120" y="71">4b</text>
+      <text class="bn" x="210" y="71">8b</text>
+      <text class="bn" x="410" y="71">16b</text>
+
+      <!-- row 2 -->
+      <rect class="cell" x="30"  y="85" width="240" height="30"/>
+      <rect class="cell key" x="270" y="85" width="80" height="30"/>
+      <rect class="cell" x="350" y="85" width="200" height="30"/>
+      <text class="tx" x="150" y="104">Identification</text>
+      <text class="tx" x="310" y="104">Flags</text>
+      <text class="tx" x="450" y="104">Fragment Offset</text>
+      <text class="bn" x="150" y="126">16b</text>
+      <text class="bn" x="310" y="126">3b</text>
+      <text class="bn" x="450" y="126">13b</text>
+
+      <!-- row 3 -->
+      <rect class="cell key" x="30" y="140" width="100" height="30"/>
+      <rect class="cell" x="130" y="140" width="140" height="30"/>
+      <rect class="cell" x="270" y="140" width="280" height="30"/>
+      <text class="tx" x="80" y="159">TTL</text>
+      <text class="tx" x="200" y="159">Protocol</text>
+      <text class="tx" x="410" y="159">Header Checksum</text>
+      <text class="bn" x="80"  y="181">8b</text>
+      <text class="bn" x="200" y="181">8b</text>
+      <text class="bn" x="410" y="181">16b</text>
+
+      <!-- row 4 -->
+      <rect class="cell key" x="30" y="195" width="520" height="30"/>
+      <text class="tx" x="290" y="214">Source IP Address</text>
+      <text class="bn" x="290" y="236">32b</text>
+
+      <!-- row 5 -->
+      <rect class="cell key" x="30" y="245" width="520" height="30"/>
+      <text class="tx" x="290" y="264">Destination IP Address</text>
+    </svg>
+    <div class="caption">Cabecera IPv4 (mínimo 20 bytes). En naranja, los campos clave: TTL, fragmentación e IPs.</div>
+  </div>
+
+  <dl class="terms">
+    <dt>Version</dt><dd><code>4</code> para IPv4, <code>6</code> para IPv6.</dd>
+    <dt>IHL</dt><dd>Longitud de la cabecera en palabras de 32 bits. Suele ser 5 (=20 B).</dd>
+    <dt>Total Length</dt><dd>Tamaño total del paquete (cabecera + datos), máximo 65535 B.</dd>
+    <dt>Identification</dt><dd>Identifica todos los fragmentos del mismo paquete.</dd>
+    <dt>Flags / Offset</dt><dd>Control de fragmentación. Offset va en <strong>unidades de 8 bytes</strong>.</dd>
+    <dt>TTL</dt><dd>Cada router lo decrementa en 1. Cuando llega a 0, se descarta y se envía ICMP TTL exceeded.</dd>
+    <dt>Protocol</dt><dd>Qué protocolo va dentro: <code>6=TCP</code>, <code>17=UDP</code>, <code>1=ICMP</code>.</dd>
+    <dt>Checksum</dt><dd>Comprueba <strong>solo la cabecera</strong>, no los datos.</dd>
+  </dl>
+
+  <h3 id="t4-direcciones">Direcciones y CIDR</h3>
+
+  <p>Una IP se divide en dos partes con la <strong>máscara de red</strong>: los bits altos identifican la red/subred, los bajos identifican al host dentro de ella.</p>
+
+  <div class="formula">
+<span class="var">Dirección IP</span> <span class="op">AND</span> <span class="var">Máscara</span> <span class="op">=</span> <span class="var">Dirección de red</span>
+
+<span class="var">Hosts útiles</span> <span class="op">=</span> <span class="num">2</span>^(<span class="var">bits_host</span>) − <span class="num">2</span>
+<span class="com">// se restan la dirección de red y la de broadcast</span>
+  </div>
+
+  <p>La <strong>notación CIDR</strong> escribe la máscara como el número de bits a 1: <code>155.210.152.0/21</code> significa que los 21 bits altos son red.</p>
+
+  <h4>Direcciones especiales</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Rango / patrón</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td>Red</td><td>bits de host todos a 0</td><td>identifica la red</td></tr>
+        <tr><td>Broadcast</td><td>bits de host todos a 1</td><td>"a todos los de mi red"</td></tr>
+        <tr><td>Loopback</td><td><code>127.0.0.0/8</code></td><td>localhost</td></tr>
+        <tr><td>Privadas (RFC 1918)</td><td><code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code></td><td>solo válidas dentro de tu red</td></tr>
+        <tr><td>Link-local</td><td><code>169.254.0.0/16</code></td><td>cuando no hay DHCP</td></tr>
+        <tr><td>Multicast (clase D)</td><td><code>224.0.0.0 – 239.255.255.255</code></td><td>grupos multicast</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout example">
+    <span class="label">Ejercicio resuelto · subred</span>
+    <p>IP <code>155.210.153.238</code> con máscara <code>255.255.248.0</code>. ¿Dirección de red y broadcast?</p>
+    <pre data-label="solución">Máscara 255.255.248.0 = /21
+                       = 11111111.11111111.11111000.00000000
+
+153  = 10011001
+248  = 11111000   (máscara del tercer octeto)
+AND  = 10011000 = 152
+
+Dirección de red:  155.210.152.0/21
+Bits de host: 32 − 21 = 11 bits
+Broadcast: relleno todos los bits de host a 1
+          = 155.210.<strong>159.255</strong>
+Rango útil: 155.210.152.1 – 155.210.159.254
+Nº hosts útiles: 2¹¹ − 2 = <strong>2046</strong></pre>
+  </div>
+
+  <div class="callout example">
+    <span class="label">Ejercicio resuelto · hosts en /26</span>
+    <pre data-label="solución">bits de host = 32 − 26 = 6
+hosts útiles = 2⁶ − 2 = <strong>62</strong>   (64 direcciones totales, menos red y broadcast)</pre>
+  </div>
+
+  <h3 id="t4-arp">ARP y DHCP</h3>
+
+  <h4>ARP (Address Resolution Protocol)</h4>
+  <p>Para enviar una trama Ethernet necesito la <strong>MAC destino</strong>. Si solo conozco la IP destino (y está en mi LAN), uso ARP para preguntar.</p>
+
+  <div class="diagram">
+    <svg id="diagram-8" viewBox="0 0 720 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Proceso ARP">
+      <style>
+        #diagram-8 .pc { fill: #171717; stroke: #e5e5e5; stroke-width: 1.5; }
+        #diagram-8 .lan{ stroke: #e5e5e5; stroke-width: 1.5; }
+        #diagram-8 .lbl{ font-family: 'Geist Mono', monospace; font-size: 11px; fill: #e5e5e5; font-weight: 600; text-anchor: middle;}
+        #diagram-8 .msg{ font-family: 'Geist', sans-serif; font-size: 12px; fill: #fb923c; font-style: italic; }
+        #diagram-8 .ip { font-family: 'Geist Mono', monospace; font-size: 10px; fill: #d4d4d8; text-anchor: middle;}
+      </style>
+      <!-- Bus -->
+      <line class="lan" x1="40" y1="120" x2="680" y2="120" stroke-width="3"/>
+
+      <!-- Hosts -->
+      <g transform="translate(80,70)">
+        <rect class="pc" x="0" y="0" width="80" height="40" rx="4"/>
+        <text class="lbl" x="40" y="18">Host A</text>
+        <text class="ip" x="40" y="33">10.0.0.1</text>
+        <line class="lan" x1="40" y1="40" x2="40" y2="50"/>
+      </g>
+      <g transform="translate(220,70)">
+        <rect class="pc" x="0" y="0" width="80" height="40" rx="4"/>
+        <text class="lbl" x="40" y="18">Host B</text>
+        <text class="ip" x="40" y="33">10.0.0.2</text>
+        <line class="lan" x1="40" y1="40" x2="40" y2="50"/>
+      </g>
+      <g transform="translate(360,70)">
+        <rect class="pc" x="0" y="0" width="80" height="40" rx="4"/>
+        <text class="lbl" x="40" y="18">Host C</text>
+        <text class="ip" x="40" y="33">10.0.0.3</text>
+        <line class="lan" x1="40" y1="40" x2="40" y2="50"/>
+      </g>
+      <g transform="translate(500,70)">
+        <rect class="pc" x="0" y="0" width="80" height="40" rx="4" fill="#4a2208"/>
+        <text class="lbl" x="40" y="18">Host D</text>
+        <text class="ip" x="40" y="33">10.0.0.4 ★</text>
+        <line class="lan" x1="40" y1="40" x2="40" y2="50"/>
+      </g>
+
+      <!-- Mensajes -->
+      <text class="msg" x="120" y="160">1. A: "¿Quién tiene 10.0.0.4?" (broadcast FF:FF:FF:FF:FF:FF)</text>
+      <text class="msg" x="120" y="180">2. Todos reciben; solo D responde con su MAC.</text>
+      <text class="msg" x="120" y="200">3. A guarda la pareja IP → MAC en su tabla ARP.</text>
+      <text class="msg" x="120" y="220">4. Ya puede enviarle tramas directas (unicast).</text>
+    </svg>
+    <div class="caption">ARP convierte una IP en su MAC dentro de la misma LAN.</div>
+  </div>
+
+  <div class="callout warn">
+    <span class="label">Cuidado</span>
+    <p>Si la IP destino <strong>no está en mi red</strong>, no hago ARP de ella. Hago ARP del <em>gateway por defecto</em> y le envío la trama a él. La IP destino del paquete se mantiene; la MAC destino cambia <strong>en cada salto</strong>.</p>
+  </div>
+
+  <h4>DHCP (Dynamic Host Configuration Protocol)</h4>
+  <p>Cuando un host se conecta, normalmente no tiene IP. DHCP se la asigna:</p>
+  <ol>
+    <li><code>DISCOVER</code>: cliente envía broadcast desde <code>0.0.0.0</code> a <code>255.255.255.255</code>, UDP 67.</li>
+    <li><code>OFFER</code>: el servidor ofrece una IP.</li>
+    <li><code>REQUEST</code>: cliente pide formalmente esa IP.</li>
+    <li><code>ACK</code>: servidor confirma. Le entrega IP, máscara, gateway y servidor DNS.</li>
+  </ol>
+
+  <h3 id="t4-nat">NAT (Network Address Translation)</h3>
+
+  <p>IPv4 tiene 2³² ≈ 4 300 millones de direcciones, agotadas hace años. La solución temporal es <strong>NAT</strong>: en una red doméstica todos usan IPs privadas, y el router las traduce a su única IP pública al salir.</p>
+
+  <div class="diagram">
+    <svg id="diagram-9" viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="NAT">
+      <style>
+        #diagram-9 .box { fill: #171717; stroke: #e5e5e5; stroke-width: 1.5; }
+        #diagram-9 .rtr { fill: #fb923c; stroke: #e5e5e5; stroke-width: 1.5; }
+        #diagram-9 .arr { stroke: #38bdf8; stroke-width: 2; fill: none; marker-end: url(#ahN); }
+        #diagram-9 .lbl { font-family: 'Geist Mono', monospace; font-size: 11px; fill: #e5e5e5; text-anchor: middle; font-weight: 600;}
+        #diagram-9 .ip  { font-family: 'Geist Mono', monospace; font-size: 10px; fill: #d4d4d8;}
+        #diagram-9 .note{ font-family: 'Geist', sans-serif; font-size: 12px; fill: #fb923c; font-style: italic;}
+      </style>
+      <defs><marker id="ahN" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/>
+      </marker></defs>
+
+      <!-- Hosts -->
+      <rect class="box" x="40" y="30" width="100" height="40" rx="4"/>
+      <text class="lbl" x="90" y="48">PC 1</text>
+      <text class="ip" x="60" y="64">192.168.1.10</text>
+      <rect class="box" x="40" y="120" width="100" height="40" rx="4"/>
+      <text class="lbl" x="90" y="138">PC 2</text>
+      <text class="ip" x="60" y="154">192.168.1.11</text>
+
+      <!-- Router NAT -->
+      <rect class="rtr" x="280" y="75" width="140" height="50" rx="6"/>
+      <text class="lbl" x="350" y="95" fill="#ededed">ROUTER NAT</text>
+      <text class="lbl" x="350" y="113" fill="#ededed" style="font-size:9px">198.51.100.5</text>
+
+      <!-- Internet -->
+      <rect class="box" x="540" y="75" width="140" height="50" rx="6" fill="#0a3148"/>
+      <text class="lbl" x="610" y="105">Internet</text>
+
+      <!-- Flechas -->
+      <path class="arr" d="M150 50 L 280 90"/>
+      <path class="arr" d="M150 140 L 280 110"/>
+      <path class="arr" d="M420 100 L 540 100"/>
+
+      <text class="note" x="170" y="40">192.168.1.10:5000</text>
+      <text class="note" x="170" y="190">192.168.1.11:5000</text>
+      <text class="note" x="430" y="90">198.51.100.5:40001</text>
+      <text class="note" x="430" y="125">198.51.100.5:40002</text>
+
+      <text class="lbl" x="360" y="205" style="font-size:11px; font-weight:400; font-family:'Geist',sans-serif; font-style:italic; fill:#d4d4d8">El router mantiene una tabla {IP_priv:puerto ↔ IP_pub:puerto}</text>
+    </svg>
+    <div class="caption">El router NAT sustituye IP+puerto de origen al salir y deshace el cambio al volver.</div>
+  </div>
+
+  <p>Es eficaz pero <em>rompe el modelo extremo-a-extremo</em>: desde fuera no se puede iniciar una conexión a un host interno sin <em>port forwarding</em>. Por eso muchos protocolos (SIP, FTP activo) se llevan mal con NAT.</p>
+
+  <h3 id="t4-icmp">ICMP, ping y traceroute</h3>
+
+  <p>ICMP (Internet Control Message Protocol) es el "canal de control" de IP. Sus mensajes más conocidos:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Mensaje</th><th>Cuándo</th><th>Herramienta</th></tr></thead>
+      <tbody>
+        <tr><td>Echo Request / Reply</td><td>comprobar si un host responde</td><td><code>ping</code></td></tr>
+        <tr><td>TTL exceeded</td><td>TTL llega a 0 en un router</td><td><code>traceroute</code></td></tr>
+        <tr><td>Destination unreachable</td><td>red/host/puerto inalcanzable</td><td>visible en muchos errores</td></tr>
+        <tr><td>Redirect</td><td>hay mejor ruta para ese destino</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>Traceroute</strong> es ingenioso: envía paquetes con TTL=1, luego TTL=2, etc. Cada router intermedio responde con <em>TTL exceeded</em> y así se descubre la ruta salto a salto.</p>
+
+  <h3 id="t4-fragmentacion">Fragmentación IPv4</h3>
+
+  <p>Si un paquete IP es más grande que la <strong>MTU</strong> del siguiente enlace, el router lo <em>fragmenta</em>. El destino final reensambla.</p>
+
+  <ul>
+    <li>Todos los fragmentos comparten el campo <code>Identification</code>.</li>
+    <li>Flag <code>More Fragments</code> = 1 en todos salvo el último.</li>
+    <li><code>Offset</code> en <strong>unidades de 8 bytes</strong>.</li>
+    <li>Cada fragmento salvo el último debe tener un payload múltiplo de 8 B.</li>
+  </ul>
+
+  <div class="callout example">
+    <span class="label">Ejercicio resuelto · fragmentación</span>
+    <p>Paquete con 1400 B de datos (cabecera 20 B aparte). Sale a un enlace con <code>MTU = 512 B</code>.</p>
+    <pre data-label="solución">Espacio para datos por fragmento: 512 − 20 = 492 B
+Debe ser múltiplo de 8 → 488 B por fragmento (salvo el último).
+
+Fragmento 1: 488 B   offset = 0     MF=1
+Fragmento 2: 488 B   offset = 61    MF=1   (488/8 = 61)
+Fragmento 3: 424 B   offset = 122   MF=0   (último)
+
+Comprobación: 488 + 488 + 424 = <strong>1400 B</strong> ✓</pre>
+  </div>
+
+  <h3 id="t4-ipv6">IPv6</h3>
+
+  <p>IPv6 surge para superar el agotamiento de IPv4 y simplificar la cabecera. Direcciones de <strong>128 bits</strong> (≈ 3,4·10³⁸).</p>
+
+  <div class="grid-2">
+    <div class="facts">
+      <div class="label">Cambios clave</div>
+      <ul>
+        <li>Cabecera fija de 40 B (sin opciones).</li>
+        <li>No hay checksum ni fragmentación en la cabecera base.</li>
+        <li>No hay broadcast: se usa multicast.</li>
+        <li>ARP sustituido por <strong>Neighbor Discovery</strong> (ICMPv6).</li>
+        <li>Autoconfiguración (SLAAC) sin DHCP.</li>
+      </ul>
+    </div>
+    <div class="facts">
+      <div class="label">Prefijos importantes</div>
+      <ul>
+        <li><code>::1/128</code> — loopback.</li>
+        <li><code>2000::/3</code> — unicast global.</li>
+        <li><code>2001:DB8::/32</code> — documentación.</li>
+        <li><code>FE80::/10</code> — link-local.</li>
+        <li><code>FF00::/8</code> — multicast.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4>Notación abreviada</h4>
+  <div class="formula">
+<span class="com">// Original:</span>
+<span class="var">2001:0DB8:0000:0000:0000:0000:A456:0024</span>
+
+<span class="com">// 1) Quitar ceros a la izquierda de cada grupo:</span>
+<span class="var">2001: DB8:   0:   0:   0:   0:A456:  24</span>
+
+<span class="com">// 2) Comprimir la cadena más larga de ceros con "::"</span>
+<span class="var">2001:DB8::A456:24</span>     <span class="op">←</span> <span class="com">solo se puede usar "::" UNA vez</span>
+  </div>
+
+  <h3 id="t4-rutas">Algoritmos de rutas</h3>
+
+  <p>Los routers comparten información para construir tablas de reexpedición. Hay dos familias:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Familia</th><th>Idea</th><th>Pros</th><th>Contras</th><th>Ejemplos</th></tr></thead>
+      <tbody>
+        <tr><td>Distancia-vector</td><td>cada nodo cuenta a vecinos "lo que sabe" (Bellman-Ford)</td><td>simple</td><td>convergencia lenta, info parcial</td><td>RIP, EIGRP, BGP</td></tr>
+        <tr><td>Estado-enlace</td><td>cada nodo difunde sus enlaces a todos (Dijkstra)</td><td>convergencia rápida, visión global</td><td>más memoria y CPU</td><td>OSPF, IS-IS</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Estructura de Internet: AS y BGP</h4>
+  <p>Internet se organiza en <strong>Sistemas Autónomos</strong> (AS), grandes redes gestionadas por una organización (un ISP, una universidad, una empresa). Dentro de un AS se usan protocolos <em>interiores</em> (OSPF, RIP); entre AS, <strong>BGP</strong> (Border Gateway Protocol), que toma decisiones por <em>políticas</em>, no solo por distancia.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- TEMA 5 -->
+<!-- ============================================================ -->
+<section class="tema" id="tema5">
+  <div class="tema-header">
+    <div class="num">05</div>
+    <div>
+      <h2>Capa de transporte</h2>
+      <p class="desc">De host a host ya tenemos IP. Aquí pasamos de <em>aplicación a aplicación</em>: puertos, fiabilidad y control de flujo.</p>
+    </div>
+  </div>
+
+  <h3 id="t5-puertos">Puertos y servicios</h3>
+
+  <p>IP entrega paquetes a una máquina, pero una máquina ejecuta muchos procesos. Los <strong>puertos</strong> (16 bits, 0–65535) identifican el proceso destino dentro del host.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Rango</th><th>Tipo</th><th>Ejemplos</th></tr></thead>
+      <tbody>
+        <tr><td>0–1023</td><td>Sistema (well-known)</td><td>22 SSH, 25 SMTP, 53 DNS, 80 HTTP, 443 HTTPS</td></tr>
+        <tr><td>1024–49151</td><td>Registrados / usuario</td><td>3306 MySQL, 5432 PostgreSQL</td></tr>
+        <tr><td>49152–65535</td><td>Dinámicos / efímeros</td><td>los que abre tu navegador</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Una <strong>conexión</strong> se identifica por la cuádrupla <code>(IP_orig, puerto_orig, IP_dest, puerto_dest)</code>. Por eso puedes tener cientos de pestañas de Chrome conectadas al mismo servidor: cada una usa un puerto efímero distinto.</p>
+
+  <h3 id="t5-udp">UDP — el simple</h3>
+
+  <p>UDP es <strong>sin conexión, no fiable, sin control de flujo</strong>. Solo añade puertos y checksum opcional. Cabecera mínima de 8 bytes.</p>
+
+  <div class="diagram">
+    <svg id="diagram-10" viewBox="0 0 720 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cabecera UDP">
+      <style>
+        #diagram-10 .c { stroke: #e5e5e5; stroke-width: 1.2; fill: #171717; }
+        #diagram-10 .h { font-family: 'Geist Mono', monospace; font-size: 12px; fill: #e5e5e5; text-anchor: middle; font-weight: 600;}
+        #diagram-10 .b { font-family: 'Geist Mono', monospace; font-size: 10px; fill: #fb923c; text-anchor: middle; font-weight: 700;}
+      </style>
+      <rect class="c" x="60"  y="20" width="280" height="36"/>
+      <rect class="c" x="340" y="20" width="280" height="36"/>
+      <rect class="c" x="60"  y="56" width="280" height="36"/>
+      <rect class="c" x="340" y="56" width="280" height="36"/>
+      <text class="h" x="200" y="42">Puerto origen</text>
+      <text class="h" x="480" y="42">Puerto destino</text>
+      <text class="h" x="200" y="78">Longitud</text>
+      <text class="h" x="480" y="78">Checksum</text>
+      <text class="b" x="200" y="105">16 bits</text>
+      <text class="b" x="480" y="105">16 bits</text>
+    </svg>
+    <div class="caption">Cabecera UDP. Tan minimalista que apenas hay más que decir.</div>
+  </div>
+
+  <ul>
+    <li><strong>Sin conexión</strong>: no hay handshake.</li>
+    <li><strong>Unidad</strong>: el datagrama. Preserva los límites del mensaje.</li>
+    <li><strong>Checksum</strong> opcional en IPv4, obligatorio en IPv6.</li>
+    <li><strong>Cuándo usarlo</strong>: DNS, juegos, streaming, multicast, QUIC (HTTP/3).</li>
+  </ul>
+
+  <h3 id="t5-tcp">TCP — el fiable</h3>
+
+  <p>TCP es <strong>orientado a conexión, fiable, ordenado, con control de flujo y de congestión</strong>. Es el caballo de batalla del Web, SSH, SMTP, etc.</p>
+
+  <div class="diagram">
+    <svg id="diagram-11" viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cabecera TCP">
+      <style>
+        #diagram-11 .c  { stroke: #e5e5e5; stroke-width: 1; fill: #171717;}
+        #diagram-11 .k  { fill: #4a2208;}
+        #diagram-11 .h  { font-family: 'Geist Mono', monospace; font-size: 11px; fill: #e5e5e5; text-anchor: middle; font-weight: 600;}
+        #diagram-11 .b  { font-family: 'Geist Mono', monospace; font-size: 9px; fill: #fb923c; text-anchor: middle; font-weight: 700;}
+        #diagram-11 .r  { font-family: 'Geist Mono', monospace; font-size: 9px; fill: #a1a1aa; text-anchor: middle;}
+      </style>
+      <text class="r" x="65"  y="20">0</text>
+      <text class="r" x="305" y="20">16</text>
+      <text class="r" x="570" y="20">31</text>
+
+      <rect class="c" x="30" y="30" width="260" height="30"/>
+      <text class="h" x="160" y="48">Puerto origen</text>
+      <rect class="c" x="290" y="30" width="260" height="30"/>
+      <text class="h" x="420" y="48">Puerto destino</text>
+
+      <rect class="c k" x="30" y="60" width="520" height="30"/>
+      <text class="h" x="290" y="78">Sequence Number (SEQ)</text>
+
+      <rect class="c k" x="30" y="90" width="520" height="30"/>
+      <text class="h" x="290" y="108">Acknowledgement Number (ACK)</text>
+
+      <rect class="c" x="30" y="120" width="60" height="30"/>
+      <text class="h" x="60" y="138">HLen</text>
+      <rect class="c" x="90" y="120" width="60" height="30"/>
+      <text class="h" x="120" y="138">Resv</text>
+      <rect class="c k" x="150" y="120" width="140" height="30"/>
+      <text class="h" x="220" y="138">Flags (S A F R P U …)</text>
+      <rect class="c k" x="290" y="120" width="260" height="30"/>
+      <text class="h" x="420" y="138">Window (anunciada)</text>
+
+      <rect class="c" x="30" y="150" width="260" height="30"/>
+      <text class="h" x="160" y="168">Checksum</text>
+      <rect class="c" x="290" y="150" width="260" height="30"/>
+      <text class="h" x="420" y="168">Urgent Pointer</text>
+
+      <rect class="c" x="30" y="180" width="520" height="30"/>
+      <text class="h" x="290" y="198">Options (variable, padding)</text>
+
+      <text class="r" x="290" y="240">Cabecera mínima: 20 B · Flags clave: SYN, ACK, FIN, RST, PSH, URG</text>
+    </svg>
+    <div class="caption">Cabecera TCP. En naranja, los campos más relevantes para el control.</div>
+  </div>
+
+  <h3 id="t5-handshake">3-way handshake y cierre</h3>
+
+  <p>Para abrir una conexión TCP se intercambian tres mensajes:</p>
+
+  <div class="diagram">
+    <svg id="diagram-12" viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3-way handshake TCP">
+      <style>
+        #diagram-12 .ln  { stroke: #e5e5e5; stroke-width: 1.5;}
+        #diagram-12 .arr { stroke: #fb923c; stroke-width: 2; fill: none; marker-end: url(#ahH);}
+        #diagram-12 .lbl { font-family: 'Geist', sans-serif; font-size: 14px; font-weight: 700; fill: #e5e5e5; text-anchor: middle;}
+        #diagram-12 .mg  { font-family: 'Geist Mono', monospace; font-size: 12px; fill: #e5e5e5; font-weight: 600; text-anchor: middle;}
+        #diagram-12 .nt  { font-family: 'Geist', sans-serif; font-size: 11px; fill: #d4d4d8; font-style: italic; text-anchor: middle;}
+      </style>
+      <defs><marker id="ahH" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#fb923c"/>
+      </marker></defs>
+
+      <text class="lbl" x="120" y="30">Cliente</text>
+      <text class="lbl" x="600" y="30">Servidor</text>
+
+      <line class="ln" x1="120" y1="45" x2="120" y2="260" stroke-dasharray="3 3"/>
+      <line class="ln" x1="600" y1="45" x2="600" y2="260" stroke-dasharray="3 3"/>
+
+      <path class="arr" d="M 130 75 L 590 110"/>
+      <text class="mg" x="360" y="80">SYN, SEQ = x</text>
+      <text class="nt" x="360" y="100">"quiero abrir conexión"</text>
+
+      <path class="arr" d="M 590 140 L 130 175"/>
+      <text class="mg" x="360" y="145">SYN + ACK, SEQ = y, ACK = x+1</text>
+      <text class="nt" x="360" y="165">"vale, yo también, y confirmo el tuyo"</text>
+
+      <path class="arr" d="M 130 205 L 590 240"/>
+      <text class="mg" x="360" y="210">ACK, SEQ = x+1, ACK = y+1</text>
+      <text class="nt" x="360" y="230">"confirmo el tuyo. Conexión establecida."</text>
+    </svg>
+    <div class="caption">3-way handshake. Cada extremo elige un número de secuencia inicial (x, y) y los confirma el otro.</div>
+  </div>
+
+  <p>El <strong>cierre ordenado</strong> es un 4-way:</p>
+  <pre data-label="cierre"> Cliente → Servidor : FIN
+ Servidor → Cliente : ACK             (puede seguir mandando)
+ Servidor → Cliente : FIN             (cuando termina)
+ Cliente → Servidor : ACK</pre>
+
+  <p>Si algo va muy mal, cualquier extremo puede enviar <code>RST</code> y cerrar de golpe.</p>
+
+  <h3 id="t5-flujo">Control de flujo (ventana anunciada)</h3>
+
+  <p>El receptor anuncia <strong>cuánto buffer libre tiene</strong> en cada ACK. El emisor no puede tener más bytes sin confirmar que ese tamaño.</p>
+
+  <div class="formula">
+<span class="var">VentanaAnunciada</span> <span class="op">=</span> <span class="var">BufferSize</span> − <span class="var">Ocupado</span>
+<span class="var">VentanaEmisión</span> <span class="op">=</span> min(<span class="var">vanun</span>, <span class="var">vcong</span>)
+  </div>
+
+  <div class="callout example">
+    <span class="label">Ejercicio resuelto · ventana anunciada</span>
+    <p>Buffer receptor de <code>64 KiB</code>, ocupado <code>20 KiB</code>.</p>
+    <pre data-label="solución">VentanaAnunciada = 64 − 20 = <strong>44 KiB</strong>
+El emisor no tendrá más de 44 KiB sin confirmar (sin contar congestión).</pre>
+  </div>
+
+  <div class="callout warn">
+    <span class="label">Error típico</span>
+    <p>Confundir <strong>control de flujo</strong> (proteger al receptor) con <strong>control de congestión</strong> (proteger a la red). Son dos problemas distintos y TCP gestiona los dos por separado.</p>
+  </div>
+
+  <h4>Eficiencia: ACK retardado y Nagle</h4>
+  <ul>
+    <li><strong>ACK retardado</strong>: en lugar de mandar ACK por cada segmento, el receptor espera un poco a ver si tiene datos que enviar (para piggyback) o si llega otro segmento (un ACK acumula varios).</li>
+    <li><strong>Algoritmo de Nagle</strong>: el emisor agrupa pequeñas escrituras seguidas en un solo segmento, hasta que llega un ACK o el buffer está lleno.</li>
+  </ul>
+
+  <h3 id="t5-timeout">Timeout adaptativo (Jacobson/Karels)</h3>
+
+  <p>TCP no usa un timeout fijo; lo ajusta a la realidad de cada conexión midiendo el RTT real.</p>
+
+  <div class="formula">
+<span class="com">// Versión sencilla:</span>
+<span class="var">DifRTT</span>    <span class="op">=</span> <span class="var">MuestraRTT</span> − <span class="var">EstimRTT</span>
+<span class="var">EstimRTT</span> += <span class="var">δ</span> · <span class="var">DifRTT</span>
+<span class="var">Timeout</span>   <span class="op">=</span> <span class="num">2</span> · <span class="var">EstimRTT</span>
+
+<span class="com">// Versión Jacobson/Karels (la real):</span>
+<span class="var">DesvRTT</span>       <span class="op">=</span> |<span class="var">DifRTT</span>| − <span class="var">EstimDesvRTT</span>
+<span class="var">EstimDesvRTT</span> += <span class="var">δ</span> · <span class="var">DesvRTT</span>
+<span class="var">Timeout</span>      <span class="op">=</span> <span class="var">μ</span> · <span class="var">EstimRTT</span> + <span class="var">φ</span> · <span class="var">EstimDesvRTT</span>
+  </div>
+
+  <p>Regla importante: <strong>no se toma muestra de RTT en segmentos retransmitidos</strong> (no se sabe a cuál corresponde el ACK).</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- TEMA 6 -->
+<!-- ============================================================ -->
+<section class="tema" id="tema6">
+  <div class="tema-header">
+    <div class="num">06</div>
+    <div>
+      <h2>QoS y control de congestión</h2>
+      <p class="desc">La red tiene recursos finitos. Si todos compiten igual, todos pierden. QoS y congestión son los dos lados del mismo problema.</p>
+    </div>
+  </div>
+
+  <h3 id="t6-qos">Mecanismos de QoS</h3>
+
+  <p>QoS (Quality of Service) es el conjunto de técnicas para <strong>tratar mejor a unos tráficos que a otros</strong> según su importancia o tipo. No crea ancho de banda nuevo: solo lo reparte de otra forma.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Mecanismo</th><th>Idea</th><th>Cuándo</th></tr></thead>
+      <tbody>
+        <tr><td>FIFO</td><td>Una cola, primero el que llega primero</td><td>simple, sin garantías</td></tr>
+        <tr><td>FQ (Fair Queueing)</td><td>Una cola por flujo, se atienden en round-robin</td><td>reparto equitativo</td></tr>
+        <tr><td>WFQ (Weighted FQ)</td><td>Como FQ pero con pesos</td><td>priorizar VoIP sobre descargas</td></tr>
+        <tr><td>DiffServ</td><td>Clasifica por <strong>tipo</strong> de tráfico (campo DSCP)</td><td>escalable, sin estado por flujo</td></tr>
+        <tr><td>IntServ + RSVP</td><td>Clasifica por <strong>flujo</strong> y <strong>reserva</strong> recursos</td><td>garantías estrictas, no escala</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="t6-diffserv">DiffServ vs IntServ</h3>
+
+  <div class="grid-2">
+    <div class="callout">
+      <span class="label">DiffServ</span>
+      <p>El emisor (o el primer router) <em>marca</em> los paquetes con un código DSCP. Los routers tratan cada paquete según su clase, sin saber a qué flujo pertenece. <strong>Escala bien</strong>, no requiere mantener estado.</p>
+    </div>
+    <div class="callout">
+      <span class="label">IntServ</span>
+      <p>Antes de enviar, la aplicación <strong>reserva</strong> recursos extremo a extremo con <code>RSVP</code> (mensajes PATH y RESV). Cada router mantiene estado por flujo. <strong>Escala mal</strong>, pero da garantías reales.</p>
+    </div>
+  </div>
+
+  <h3 id="t6-congestion">Control de congestión TCP</h3>
+
+  <p>La <strong>congestión</strong> ocurre cuando la red recibe más tráfico del que puede reexpedir. Las colas se llenan y empiezan a tirarse paquetes. TCP detecta la congestión <em>por las pérdidas</em>: si un segmento no se confirma, asume que la red está saturada.</p>
+
+  <p>La idea general:</p>
+  <div class="formula">
+<span class="op">Si no hay pérdidas →</span> aumentar poco <span class="var">vcong</span>
+<span class="op">Si hay pérdidas →</span> reducir mucho <span class="var">vcong</span>
+  </div>
+
+  <p>TCP mantiene una <strong>ventana de congestión</strong> <code>vcong</code> independiente de la anunciada. La ventana real que usa es <code>min(vanun, vcong)</code>.</p>
+
+  <h4>Slow Start y Congestion Avoidance</h4>
+
+  <div class="diagram">
+    <svg id="diagram-13" viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Evolución ventana de congestión TCP">
+      <style>
+        #diagram-13 .ax  { stroke: #e5e5e5; stroke-width: 1.5;}
+        #diagram-13 .gr  { stroke: #262626; stroke-width: 0.5;}
+        #diagram-13 .ss  { stroke: #fb923c; stroke-width: 2.5; fill: none;}
+        #diagram-13 .ca  { stroke: #38bdf8; stroke-width: 2.5; fill: none;}
+        #diagram-13 .ds  { stroke: #fbbf24; stroke-width: 1.5; stroke-dasharray: 4 3; fill: none;}
+        #diagram-13 .tx  { font-family: 'Geist Mono', monospace; font-size: 11px; fill: #e5e5e5; font-weight: 600;}
+        #diagram-13 .lb  { font-family: 'Geist', sans-serif; font-size: 12px; font-weight: 600; fill: #38bdf8;}
+        #diagram-13 .lt  { font-family: 'Geist', sans-serif; font-size: 11px; fill: #d4d4d8; font-style: italic;}
+      </style>
+      <!-- grid -->
+      <g>
+        <line class="gr" x1="60" y1="50" x2="680" y2="50"/>
+        <line class="gr" x1="60" y1="100" x2="680" y2="100"/>
+        <line class="gr" x1="60" y1="150" x2="680" y2="150"/>
+        <line class="gr" x1="60" y1="200" x2="680" y2="200"/>
+      </g>
+      <!-- axes -->
+      <line class="ax" x1="60" y1="250" x2="680" y2="250"/>
+      <line class="ax" x1="60" y1="30"  x2="60"  y2="250"/>
+      <text class="tx" x="350" y="280" text-anchor="middle">tiempo (RTTs)</text>
+      <text class="tx" x="35"  y="140" transform="rotate(-90 35 140)" text-anchor="middle">vcong</text>
+
+      <!-- ssthresh inicial -->
+      <line class="ds" x1="60" y1="80" x2="680" y2="80"/>
+      <text class="tx" x="600" y="75" fill="#fbbf24">ssthresh</text>
+
+      <!-- Slow Start: exponencial hasta ssthresh -->
+      <path class="ss" d="M60,240 L100,225 L140,200 L180,160 L220,95"/>
+      <text class="lb" x="100" y="245" fill="#fb923c">slow start</text>
+
+      <!-- Congestion Avoidance: lineal -->
+      <path class="ca" d="M220,95 L260,85 L300,75 L340,65 L380,55"/>
+      <text class="lb" x="320" y="50" fill="#38bdf8">congestion avoidance</text>
+
+      <!-- Pérdida → cae -->
+      <line class="ds" x1="380" y1="55" x2="380" y2="200" stroke="#fb923c"/>
+      <text class="tx" x="385" y="195" fill="#fb923c">¡pérdida!</text>
+
+      <!-- Nuevo slow start -->
+      <path class="ss" d="M380,240 L420,225 L460,200 L500,170"/>
+      <!-- ssthresh nueva (mitad de antes) -->
+      <line class="ds" x1="380" y1="140" x2="680" y2="140"/>
+      <text class="tx" x="600" y="135" fill="#fbbf24">nueva ssthresh</text>
+      <!-- CA otra vez -->
+      <path class="ca" d="M500,170 L540,160 L580,150 L620,140 L660,130"/>
+
+      <text class="lt" x="350" y="20" text-anchor="middle">Crecimiento exponencial → cambio a lineal en ssthresh → pérdida → reset y nueva ssthresh = ½</text>
+    </svg>
+    <div class="caption">Evolución típica de la ventana de congestión TCP (Tahoe).</div>
+  </div>
+
+  <ul>
+    <li><strong>Slow Start</strong>: empieza con <code>vcong = 1 MSS</code>. Cada ACK recibido duplica aproximadamente la ventana cada RTT. Crece exponencialmente.</li>
+    <li><strong>Congestion Avoidance</strong>: al llegar a <code>ssthresh</code>, pasa a crecer linealmente (+1 MSS por RTT).</li>
+    <li><strong>Timeout</strong>: si se pierde un segmento, se ajusta <code>ssthresh = vcong / 2</code> y se vuelve a <code>vcong = 1 MSS</code>.</li>
+  </ul>
+
+  <h3 id="t6-variantes">Variantes: Tahoe, Reno, SACK, Vegas</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Variante</th><th>Aporte clave</th></tr></thead>
+      <tbody>
+        <tr><td>Tahoe</td><td>Añade <strong>retransmisión rápida</strong>: tras 3 ACK duplicados, retransmite sin esperar al timeout.</td></tr>
+        <tr><td>Reno</td><td>Añade <strong>recuperación rápida</strong>: tras 3 ACK duplicados, no vuelve a slow start; baja a la mitad y sigue en congestion avoidance.</td></tr>
+        <tr><td>SACK</td><td><strong>ACK selectivo</strong>: el receptor indica qué bloques tiene; el emisor retransmite solo los huecos.</td></tr>
+        <tr><td>Vegas</td><td>Detecta congestión <strong>por el aumento del RTT</strong>, antes de que haya pérdidas (proactivo, no reactivo).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="t6-ecn">ECN y RED — más allá de la pérdida</h3>
+
+  <ul>
+    <li><strong>ECN</strong> (Explicit Congestion Notification): los routers, cuando empiezan a saturarse, <em>marcan</em> los paquetes en lugar de tirarlos. Los extremos reaccionan reduciendo la ventana <em>sin haber perdido nada</em>.</li>
+    <li><strong>RED</strong> (Random Early Detection): el router descarta aleatoriamente paquetes <em>antes</em> de llenar su buffer. Como TCP reduce su ventana al perder, esto evita la sincronización de muchos flujos cayendo a la vez.</li>
+  </ul>
+
+  <div class="callout warn">
+    <span class="label">Error típico</span>
+    <p>Asumir que toda pérdida es por congestión. En enlaces inalámbricos a menudo se pierde por errores físicos. Eso confunde a TCP, que reduce la ventana innecesariamente.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TEMA 7 -->
+<!-- ============================================================ -->
+<section class="tema" id="tema7">
+  <div class="tema-header">
+    <div class="num">07</div>
+    <div>
+      <h2>Capas superiores</h2>
+      <p class="desc">Sesión, presentación y aplicación. HTTP, DNS, SMTP y todo lo que <em>realmente</em> usas a diario.</p>
+    </div>
+  </div>
+
+  <h3 id="t7-sesion">Sesión y presentación</h3>
+
+  <ul>
+    <li><strong>Sesión</strong>: establece, mantiene y cierra <em>conversaciones</em> entre aplicaciones. En TCP/IP no existe como capa separada; suele estar embebida en la aplicación.</li>
+    <li><strong>Presentación</strong>: traduce el formato de los datos. Codificación de caracteres (UTF-8), serialización (JSON, XML), compresión, cifrado.</li>
+  </ul>
+
+  <p><strong>TLS</strong> es el ejemplo más claro de capa de presentación moderna: se sitúa <em>entre</em> TCP y la aplicación, cifra los datos y autentica el extremo. HTTPS = HTTP + TLS.</p>
+
+  <h3 id="t7-http">HTTP</h3>
+
+  <p>El protocolo del Web. Petición–respuesta, sin estado por defecto, sobre TCP (HTTP/1.x y /2) o sobre QUIC/UDP (HTTP/3).</p>
+
+  <h4>Anatomía de una petición</h4>
+  <pre data-label="petición HTTP">GET /index.html HTTP/1.1            ← línea de petición
+Host: www.unizar.es                  ← cabeceras
+User-Agent: Mozilla/5.0
+Accept: text/html
+Connection: keep-alive
+                                     ← línea en blanco
+&lt;cuerpo opcional&gt;</pre>
+
+  <h4>Anatomía de una respuesta</h4>
+  <pre data-label="respuesta HTTP">HTTP/1.1 200 OK                      ← línea de estado
+Date: Thu, 04 Jun 2026 12:34:56 GMT
+Server: nginx/1.25
+Content-Type: text/html; charset=utf-8
+Content-Length: 1730
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;…</pre>
+
+  <h4>Métodos</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Método</th><th>Idempotente</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td><code>GET</code></td><td>sí</td><td>obtener un recurso</td></tr>
+        <tr><td><code>HEAD</code></td><td>sí</td><td>como GET pero solo cabeceras</td></tr>
+        <tr><td><code>POST</code></td><td>no</td><td>enviar datos (formularios, APIs)</td></tr>
+        <tr><td><code>PUT</code></td><td>sí</td><td>reemplazar recurso</td></tr>
+        <tr><td><code>DELETE</code></td><td>sí</td><td>borrar recurso</td></tr>
+        <tr><td><code>PATCH</code></td><td>no</td><td>modificar parcialmente</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Códigos de estado</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Familia</th><th>Significado</th><th>Ejemplos</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill teal">1xx</span></td><td>Informativo</td><td>100 Continue, 101 Switching Protocols</td></tr>
+        <tr><td><span class="pill teal">2xx</span></td><td>Éxito</td><td>200 OK, 201 Created, 204 No Content</td></tr>
+        <tr><td><span class="pill gold">3xx</span></td><td>Redirección</td><td>301 Moved, 304 Not Modified</td></tr>
+        <tr><td><span class="pill">4xx</span></td><td>Error del cliente</td><td>400 Bad Request, 401 Unauthorized, 403, 404, 429</td></tr>
+        <tr><td><span class="pill">5xx</span></td><td>Error del servidor</td><td>500 Internal, 502 Bad Gateway, 503, 504</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Versiones de HTTP</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Versión</th><th>Año</th><th>Idea clave</th></tr></thead>
+      <tbody>
+        <tr><td>HTTP/1.0</td><td>1996</td><td>una conexión TCP por objeto</td></tr>
+        <tr><td>HTTP/1.1</td><td>1997</td><td>conexión <em>persistente</em>, pipelining</td></tr>
+        <tr><td>HTTP/2</td><td>2015</td><td>multiplexación, cabeceras comprimidas (HPACK), server push</td></tr>
+        <tr><td>HTTP/3</td><td>2022</td><td>sobre <strong>QUIC</strong> (UDP), cifrado obligatorio, menos RTTs</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="t7-dns">DNS</h3>
+
+  <p>DNS traduce nombres de dominio (<code>www.unizar.es</code>) en direcciones IP (y mucho más). Es un sistema <strong>jerárquico y distribuido</strong>.</p>
+
+  <div class="diagram">
+    <svg id="diagram-14" viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Jerarquía DNS">
+      <style>
+        #diagram-14 .nd { fill: #171717; stroke: #e5e5e5; stroke-width: 1.5;}
+        #diagram-14 .nd-r { fill: #fb923c; }
+        #diagram-14 .ln { stroke: #e5e5e5; stroke-width: 1; fill: none;}
+        #diagram-14 .tx { font-family: 'Geist Mono', monospace; font-size: 11px; fill: #e5e5e5; text-anchor: middle; font-weight: 700;}
+        #diagram-14 .tw { fill: #ededed;}
+        #diagram-14 .lb { font-family: 'Geist', sans-serif; font-size: 11px; fill: #d4d4d8; font-style: italic; text-anchor: middle;}
+      </style>
+
+      <!-- root -->
+      <rect class="nd nd-r" x="320" y="20" width="80" height="30" rx="4"/>
+      <text class="tx tw" x="360" y="40">. (raíz)</text>
+
+      <!-- TLDs -->
+      <line class="ln" x1="360" y1="50" x2="160" y2="90"/>
+      <line class="ln" x1="360" y1="50" x2="360" y2="90"/>
+      <line class="ln" x1="360" y1="50" x2="560" y2="90"/>
+      <rect class="nd" x="120" y="90" width="80" height="30" rx="4"/>
+      <text class="tx" x="160" y="110">.es</text>
+      <rect class="nd" x="320" y="90" width="80" height="30" rx="4"/>
+      <text class="tx" x="360" y="110">.com</text>
+      <rect class="nd" x="520" y="90" width="80" height="30" rx="4"/>
+      <text class="tx" x="560" y="110">.org</text>
+
+      <!-- 2nd level -->
+      <line class="ln" x1="160" y1="120" x2="160" y2="160"/>
+      <rect class="nd" x="100" y="160" width="120" height="30" rx="4"/>
+      <text class="tx" x="160" y="180">unizar.es</text>
+
+      <!-- hosts -->
+      <line class="ln" x1="160" y1="190" x2="80" y2="230"/>
+      <line class="ln" x1="160" y1="190" x2="240" y2="230"/>
+      <rect class="nd" x="30" y="230" width="100" height="30" rx="4"/>
+      <text class="tx" x="80" y="250" style="font-size:10px">www.unizar.es</text>
+      <rect class="nd" x="190" y="230" width="100" height="30" rx="4"/>
+      <text class="tx" x="240" y="250" style="font-size:10px">cps.unizar.es</text>
+
+      <text class="lb" x="360" y="275">Cada nivel delega en el siguiente. El FQDN es el camino completo: hendrix01.cps.unizar.es.</text>
+    </svg>
+    <div class="caption">Jerarquía DNS, leída de derecha a izquierda en el nombre.</div>
+  </div>
+
+  <h4>Resolución típica (iterativa)</h4>
+  <ol>
+    <li>El cliente pregunta al <strong>resolver</strong> de su DNS local (ej: el del ISP).</li>
+    <li>El resolver pregunta a un servidor raíz: "¿quién sabe de <code>.es</code>?"</li>
+    <li>Raíz responde: "pregunta al servidor de <code>.es</code>".</li>
+    <li>El resolver pregunta al servidor de <code>.es</code>: "¿quién sabe de <code>unizar.es</code>?"</li>
+    <li>El de <code>.es</code> responde con el servidor autoritativo de unizar.</li>
+    <li>El resolver pregunta a ese servidor y obtiene la IP.</li>
+    <li>Devuelve la IP al cliente y la <em>cachea</em>.</li>
+  </ol>
+
+  <h4>Tipos de registros</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipo</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td><code>A</code></td><td>nombre → IPv4</td></tr>
+        <tr><td><code>AAAA</code></td><td>nombre → IPv6</td></tr>
+        <tr><td><code>CNAME</code></td><td>alias a otro nombre</td></tr>
+        <tr><td><code>MX</code></td><td>servidor de correo del dominio</td></tr>
+        <tr><td><code>NS</code></td><td>servidores autoritativos del dominio</td></tr>
+        <tr><td><code>TXT</code></td><td>texto libre (SPF, DKIM…)</td></tr>
+        <tr><td><code>PTR</code></td><td>IP → nombre (reverse DNS)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <pre data-label="ejemplos de consulta"># Resolver un nombre
+host www.unizar.es
+
+# Reverse DNS
+dig -x 155.210.152.183 +short
+
+# Servidores de correo
+host -t mx unizar.es</pre>
+
+  <h3 id="t7-smtp">SMTP y correo</h3>
+
+  <p>SMTP envía correo entre servidores. Es un protocolo de texto, originalmente solo ASCII. Para adjuntar imágenes o caracteres no ASCII, se codifican con <strong>MIME</strong> (típicamente en <strong>base64</strong>).</p>
+
+  <ul>
+    <li><strong>SMTP</strong> (puerto 25 / 587): <em>envío</em>.</li>
+    <li><strong>POP3</strong> (110) / <strong>IMAP</strong> (143): <em>lectura</em> desde el cliente.</li>
+  </ul>
+
+  <div class="callout warn">
+    <span class="label">Error típico</span>
+    <p>Decir que SMTP "lee" correo. SMTP solo lo entrega entre servidores. Para leer usas IMAP o POP.</p>
+  </div>
+
+  <h3 id="t7-overlay">Redes superpuestas, P2P, UPnP</h3>
+
+  <ul>
+    <li><strong>Red superpuesta</strong> (overlay): red lógica construida <em>encima</em> de otra red. Sus enlaces son túneles.</li>
+    <li><strong>Tor</strong>: overlay para anonimato. Los datos pasan por varios nodos cifrados en capas (onion routing).</li>
+    <li><strong>CDN</strong>: red de servidores distribuidos geográficamente que cachean contenido cerca del usuario.</li>
+    <li><strong>P2P</strong>: los nodos actúan como cliente <em>y</em> servidor. BitTorrent es el ejemplo clásico.</li>
+    <li><strong>UPnP</strong>: descubrimiento automático de dispositivos en una LAN (impresoras, NAS, abrir puertos en el router…).</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<!-- REPASO FINAL -->
+<!-- ============================================================ -->
+<section class="tema" id="repaso">
+  <div class="tema-header">
+    <div class="num">08</div>
+    <div>
+      <h2>Repaso final &amp; preparación de examen</h2>
+      <p class="desc">Tabla resumen, formulario y los errores que se repiten cada año.</p>
+    </div>
+  </div>
+
+  <h3 id="repaso-tabla">Tabla de repaso por tema</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tema</th><th>Lo imprescindible</th><th>Fórmula / clave</th></tr></thead>
+      <tbody>
+        <tr><td>Arquitectura</td><td>OSI 7 capas, TCP/IP 4, encapsulado</td><td>HTTP/TCP/IP/Eth</td></tr>
+        <tr><td>Física</td><td>símbolos, baudios, Nyquist, Shannon</td><td><code>Rb=Rs·log₂M</code>; <code>C=B·log₂(1+S/N)</code></td></tr>
+        <tr><td>Enlace · métricas</td><td><code>Tt</code>, <code>Tp</code>, RTT, utilización</td><td><code>Tt=L/Vt</code>; <code>Tp=D/Vp</code></td></tr>
+        <tr><td>MAC</td><td>CSMA/CA (Wi-Fi), CSMA/CD (Eth con hub)</td><td><code>Lmin = 2·Tp·Vt</code></td></tr>
+        <tr><td>Errores</td><td>paridad, checksum, CRC, Hamming</td><td>CRC con XOR</td></tr>
+        <tr><td>Ventana</td><td>stop&amp;wait, go-back-n, selective repeat</td><td><code>NS ≥ w + wr</code></td></tr>
+        <tr><td>IPv4</td><td>CIDR, subredes, ARP, NAT</td><td><code>hosts=2^h−2</code></td></tr>
+        <tr><td>Fragmentación</td><td>MTU, Ident, MF, Offset</td><td>Offset en unidades de 8 B</td></tr>
+        <tr><td>IPv6</td><td>128 bits, sin broadcast, ND</td><td><code>::</code> comprime ceros</td></tr>
+        <tr><td>Rutas</td><td>vector-distancia vs estado-enlace</td><td>OSPF (Dijkstra), BGP (políticas)</td></tr>
+        <tr><td>TCP</td><td>handshake, ventana, retransmisión</td><td><code>min(vanun, vcong)</code></td></tr>
+        <tr><td>Congestión</td><td>Slow start, CA, Tahoe/Reno/SACK</td><td>aumentar poco, reducir mucho</td></tr>
+        <tr><td>HTTP</td><td>petición/respuesta, métodos, códigos</td><td>GET/POST · 2xx/4xx/5xx</td></tr>
+        <tr><td>DNS</td><td>jerárquico, iterativo, A/MX/PTR</td><td>FQDN absoluto con punto final</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="repaso-formulas">Formulario rápido</h3>
+
+  <div class="formula">
+<span class="com">// SEÑALES Y SÍMBOLOS</span>
+<span class="var">k</span>  = log<span class="num">2</span>(<span class="var">M</span>)            <span class="com">// bits/símbolo</span>
+<span class="var">Rs</span> = <span class="num">1</span>/<span class="var">Ts</span>                <span class="com">// baudios</span>
+<span class="var">Rb</span> = <span class="var">Rs</span> · log<span class="num">2</span>(<span class="var">M</span>)     <span class="com">// bits/s</span>
+
+<span class="com">// CAPACIDAD</span>
+<span class="var">Rs</span> ≤ <span class="num">2</span><span class="var">B</span>                  <span class="com">// Nyquist</span>
+<span class="var">C</span>  = <span class="var">B</span> · log<span class="num">2</span>(<span class="num">1</span> + <span class="var">S/N</span>)   <span class="com">// Shannon</span>
+
+<span class="com">// TIEMPOS</span>
+<span class="var">Tt</span> = <span class="var">L</span>/<span class="var">Vt</span>      <span class="com">// transmisión (L en bits)</span>
+<span class="var">Tp</span> = <span class="var">D</span>/<span class="var">Vp</span>      <span class="com">// propagación</span>
+
+<span class="com">// dB Y POTENCIAS</span>
+<span class="var">SNR(dB)</span> = <span class="num">10</span>·log<span class="num">10</span>(<span class="var">S/N</span>)
+<span class="var">dBm</span>     = <span class="num">10</span>·log<span class="num">10</span>(<span class="var">P</span>/<span class="num">1mW</span>)
+<span class="var">Pr</span> = <span class="var">Pt</span> − <span class="var">L</span>;   <span class="var">M</span> = <span class="var">Pr</span> − <span class="var">Sr</span> ≥ <span class="num">0</span>
+
+<span class="com">// CSMA/CD</span>
+<span class="var">Lmin</span> = <span class="num">2</span>·<span class="var">Tp</span>·<span class="var">Vt</span>
+
+<span class="com">// ARQ</span>
+<span class="var">U</span>  = <span class="num">100</span>·<span class="var">Tenvío</span>/<span class="var">RTT</span>                       <span class="com">// stop&wait</span>
+<span class="var">U</span>  = min(<span class="num">100</span>, <span class="num">100</span>·<span class="var">w</span>·<span class="var">Tenvío</span>/<span class="var">RTT</span>)            <span class="com">// ventana</span>
+<span class="var">NS</span> ≥ <span class="var">w</span> + <span class="var">wr</span>;  bits_seq = ⌈log<span class="num">2</span>(<span class="var">NS</span>)⌉
+
+<span class="com">// IPv4</span>
+red       = IP <span class="op">AND</span> máscara
+hosts_útiles = <span class="num">2</span>^(<span class="var">bits_host</span>) − <span class="num">2</span>
+
+<span class="com">// TCP</span>
+VentanaEmisión = min(<span class="var">vanun</span>, <span class="var">vcong</span>)
+Timeout = <span class="var">μ</span>·<span class="var">EstimRTT</span> + <span class="var">φ</span>·<span class="var">EstimDesvRTT</span>
+  </div>
+
+  <h3 id="repaso-errores">Errores típicos en examen</h3>
+
+  <div class="grid-2">
+    <div class="callout warn">
+      <span class="label">Unidades</span>
+      <p>Usar bytes donde la fórmula pide bits (<code>Tt = L/Vt</code>). Confundir <code>k</code> y <code>M</code>. Olvidar que <code>1 kbps = 10³ b/s</code>, no 2¹⁰.</p>
+    </div>
+    <div class="callout warn">
+      <span class="label">Baudios ≠ bps</span>
+      <p>Solo coinciden cuando <code>M = 2</code>. Si te dan QAM-16, hay 4 bits por símbolo.</p>
+    </div>
+    <div class="callout warn">
+      <span class="label">CSMA</span>
+      <p>Wi-Fi usa CSMA/<strong>CA</strong>, no CD. En radio no se detectan colisiones desde el emisor.</p>
+    </div>
+    <div class="callout warn">
+      <span class="label">CRC</span>
+      <p>Hacer la resta en aritmética normal. ¡Es XOR! Sin acarreo.</p>
+    </div>
+    <div class="callout warn">
+      <span class="label">Subredes</span>
+      <p>Olvidar restar la red y la broadcast en el número de hosts útiles.</p>
+    </div>
+    <div class="callout warn">
+      <span class="label">Fragmentación</span>
+      <p>El campo Offset va en <strong>unidades de 8 bytes</strong>, no en bytes. Y todos los fragmentos salvo el último deben tener un payload múltiplo de 8.</p>
+    </div>
+    <div class="callout warn">
+      <span class="label">ARP fuera de la LAN</span>
+      <p>Si la IP destino no está en mi red, hago ARP del <em>gateway</em>, no de la IP final.</p>
+    </div>
+    <div class="callout warn">
+      <span class="label">TCP flujo vs congestión</span>
+      <p>La ventana anunciada protege al receptor; <code>vcong</code> protege a la red. La efectiva es el <strong>mínimo</strong>.</p>
+    </div>
+    <div class="callout warn">
+      <span class="label">IP es best effort</span>
+      <p>IP no garantiza entrega. La fiabilidad la pone TCP por encima.</p>
+    </div>
+    <div class="callout warn">
+      <span class="label">IPv6 no tiene broadcast</span>
+      <p>Lo reemplaza por multicast. Y ARP se sustituye por Neighbor Discovery (ICMPv6).</p>
+    </div>
+  </div>
+
+  <h3>Preguntas tipo de examen</h3>
+
+  <h4>Teoría corta — autoevaluación rápida</h4>
+  <ol>
+    <li>Diferencia entre enlace punto-a-punto y extremo-a-extremo.</li>
+    <li>Explica encapsulado con un ejemplo HTTP/TCP/IP/Ethernet.</li>
+    <li>Relaciona hub, switch y router con las capas OSI.</li>
+    <li>¿Qué limita Nyquist y qué limita Shannon?</li>
+    <li>¿Por qué Wi-Fi usa CSMA/CA y no CSMA/CD?</li>
+    <li>¿Cómo funciona un switch aprendiz?</li>
+    <li>¿Qué problema resuelven las VLANs y el spanning tree?</li>
+    <li>Diferencia entre go-back-N y selective repeat.</li>
+    <li>¿Para qué sirve TTL en IP?</li>
+    <li>¿Qué hace ARP y por qué es broadcast?</li>
+    <li>¿Qué problema soluciona NAT y qué problema crea?</li>
+    <li>Diferencia entre distancia-vector y estado-enlace.</li>
+    <li>Explica el 3-way handshake con SEQ y ACK.</li>
+    <li>Diferencia entre control de flujo y de congestión.</li>
+    <li>Diferencia entre slow start y congestion avoidance.</li>
+    <li>¿Qué aportan Tahoe, Reno y SACK?</li>
+    <li>¿Qué es ECN y cómo evita pérdidas?</li>
+    <li>Diferencia entre DiffServ e IntServ.</li>
+    <li>Estructura de una petición y una respuesta HTTP.</li>
+    <li>¿Qué es un FQDN y cómo se resuelve un nombre con DNS?</li>
+  </ol>
+
+  <h4>Problemas prácticos probables</h4>
+  <ol>
+    <li>Calcular <code>Tt</code>, <code>Tp</code>, <code>RTT</code> y utilización.</li>
+    <li>Calcular <code>Rb</code> dado <code>M</code> y <code>Rs</code>.</li>
+    <li>Aplicar Nyquist y Shannon.</li>
+    <li>Calcular <code>Lmin</code> en CSMA/CD.</li>
+    <li>Calcular CRC con XOR.</li>
+    <li>Simular stop&amp;wait con pérdidas.</li>
+    <li>Calcular utilización con ventana deslizante.</li>
+    <li>Calcular bits de secuencia para una ventana dada.</li>
+    <li>Determinar red, broadcast y hosts útiles de una subred.</li>
+    <li>Agrupar rutas con CIDR.</li>
+    <li>Fragmentar un paquete IPv4 según una MTU.</li>
+    <li>Rellenar una tabla ARP o de reexpedición.</li>
+    <li>Comprimir/descomprimir una dirección IPv6.</li>
+    <li>Dibujar el 3-way handshake TCP con números de secuencia.</li>
+    <li>Calcular si una ventana TCP basta para utilización 100 %.</li>
+    <li>Simular la evolución de <code>vcong</code> en TCP Reno.</li>
+  </ol>
+
+</section>
+
+<footer class="foot">
+  <p>Guía de estudio · Redes de Computadores · <span>7 temas</span> · diagramas en SVG · revisada para examen</p>
+</footer>
+
+</main>
+</div>
+
+</body>
+</html>
